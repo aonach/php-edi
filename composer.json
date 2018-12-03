@@ -1,0 +1,25 @@
+{
+    "name": "aonach/x12parser",
+    "description": "Aonach library to parse X12 EDI files",
+    "keywords": ["library", "X12", "EDI", "parse"],
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Aonach Dev Team",
+            "email": "dev@aonach.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "monolog/monolog": "1.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aonach\\": "src/"
+        }
+    }
+}

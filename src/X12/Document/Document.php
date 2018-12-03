@@ -1,6 +1,6 @@
 <?php
 
-namespace EDI;
+namespace Aonach\X12\Document;
 
 class Document {
     private $segments = array();
