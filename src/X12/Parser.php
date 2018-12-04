@@ -117,7 +117,7 @@ class Parser {
                                     $current_isa['iea']
                                 )
                             );
-                            $document = new \EDI\Document($segments);
+                            $document = new Document($segments);
                             array_push($documents, $document); 
                         }
                     }
