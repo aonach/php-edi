@@ -34,7 +34,7 @@ class GsParser {
     /**
      *
      */
-    const GS_06 = 'group_control_number';
+    const GS_06 = 'gs_group_control_number';
     /**
      *
      */

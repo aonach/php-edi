@@ -19,7 +19,7 @@ class GeParser {
     /**
      *
      */
-    const GE_02 = 'group_control_number'; // Group Control Number -  Assigned number originated and maintained by the sender
+    const GE_02 = 'ge_group_control_number'; // Group Control Number -  Assigned number originated and maintained by the sender
 
     /**
      * @param $segment

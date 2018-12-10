@@ -26,34 +26,34 @@ class Parser {
             foreach ($document->getSegments() as $segment){
                 switch ($segment[0]){
                     case 'ISA':
-                        $documetParsed['isa'] = IsaParser::parse($segment);
+                        $documetParsed = array_merge_recursive($documetParsed, IsaParser::parse($segment));
                         break;
                     case 'GS';
-                        $documetParsed['gs'] = GsParser::parse($segment);
+                        $documetParsed = array_merge_recursive($documetParsed, GsParser::parse($segment));
                         break;
                     case 'ST';
-                        $documetParsed['st'] = StParser::parse($segment);
+                        $documetParsed = array_merge_recursive($documetParsed, StParser::parse($segment));
                         break;
                     case 'BEG';
-                        $documetParsed['beg'] = BegParser::parse($segment);
+                        $documetParsed = array_merge_recursive($documetParsed, BegParser::parse($segment));
                         break;
                     case 'N1';
-                        $documetParsed['n1'] = N1Parser::parse($segment);
+                        $documetParsed = array_merge_recursive($documetParsed, N1Parser::parse($segment));
                         break;
                     case 'PO1';
-                        $documetParsed['pO1'] = Po1Parser::parse($segment);
+                        $documetParsed['po1'][] = Po1Parser::parse($segment);
                         break;
                     case 'CTT';
-                        $documetParsed['ctt'] = CttParser::parse($segment);
+                        $documetParsed = array_merge_recursive($documetParsed, CttParser::parse($segment));
                         break;
                     case 'SE';
-                        $documetParsed['se'] = SeParser::parse($segment);
+                        $documetParsed = array_merge_recursive($documetParsed, SeParser::parse($segment));
                         break;
                     case 'GE';
-                        $documetParsed['ge'] = GeParser::parse($segment);
+                        $documetParsed = array_merge_recursive($documetParsed, GeParser::parse($segment));
                         break;
                     case 'IEA';
-                        $documetParsed['iea'] = IeaParser::parse($segment);
+                        $documetParsed = array_merge_recursive($documetParsed, IeaParser::parse($segment));
                         break;
                     default:
                         break;
