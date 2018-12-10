@@ -76,7 +76,7 @@ class IsaParser {
     /**
      *
      */
-    const ISA_13 = 'interchange_control_number';
+    const ISA_13 = 'isa_interchange_control_number';
 
     /**
      * Code ‘0’ indicates that no acknowledgment has been requested.

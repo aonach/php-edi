@@ -11,7 +11,7 @@ class BegParser {
     /**
      *
      */
-    const BEG_00 = 'transaction_header';//ST represents the beginning segment of the purchase order.
+    const BEG_00 = 'beginning_segment_po';//ST represents the beginning segment of the purchase order.
 
     /**
      *

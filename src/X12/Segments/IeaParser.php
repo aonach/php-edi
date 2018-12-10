@@ -18,7 +18,7 @@ class IeaParser {
     /**
      *
      */
-    const IEA_02 = 'interchange_control_number'; // Interchange Control Number - A control number assigned by the interchange sender
+    const IEA_02 = 'iea_interchange_control_number'; // Interchange Control Number - A control number assigned by the interchange sender
 
     /**
      * @param $segment
