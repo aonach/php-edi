@@ -22,5 +22,21 @@ class Document {
         }
         return $str;
     }
+
+    /**
+     * @return array
+     */
+    public function getSegments(): array
+    {
+        return $this->segments;
+    }
+
+    /**
+     * @param array $segments
+     */
+    public function setSegments(array $segments): void
+    {
+        $this->segments = $segments;
+    }
 }
 ?>
