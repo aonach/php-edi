@@ -1,9 +1,9 @@
 <?php
-namespace Aonach\X12\Segments;
+namespace Aonach\X12\Parse\Segments;
 
 /**
  * Class GsParser
- * @package Aonach\X12\Segments
+ * @package Aonach\X12\Parse\Segments
  */
 class GsParser {
 

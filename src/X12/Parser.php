@@ -1,7 +1,7 @@
 <?php
 namespace Aonach\X12;
 
-use Aonach\X12\Document\Document;
+use Aonach\X12\Parse\Document\Document;
 
 /**
 * A class to parse ASC X12 EDI documents.  Currently the entire document is 

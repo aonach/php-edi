@@ -1,30 +1,24 @@
 <?php
-
-namespace Aonach\X12\Segments;
+namespace Aonach\X12\Parse\Segments;
 
 /**
- * Class CTTParser
- * @package Aonach\X12\Segments
+ * Class IeaParser
+ * @package Aonach\X12\Parse\Segments
  */
-class CttParser {
-
+class IeaParser {
+    /**
+     *
+     */
+    const IEA_00 = 'end_interchange'; //To define the end of an interchange of zero or more functional groups and interchange-related control segments
+    /**
+     *
+     */
+    const IEA_01 = 'number_of_functional_groups'; //Number of Included Functional Groups - A count of the number of functional groups included in an interchange
 
     /**
      *
      */
-    const CTT_00 = 'baseline_item_data'; // To specify basic and most frequently used line item data
-
-    /**
-     *
-     */
-    const CTT_01 = 'number_of_items'; //Number of Line Items - Total number of line items in the transaction set
-
-    /**
-     *
-     */
-    const CTT_02 = 'number_of_units'; //Number of units - Total number of units ordered is also 1.
-
-
+    const IEA_02 = 'iea_interchange_control_number'; // Interchange Control Number - A control number assigned by the interchange sender
 
     /**
      * @param $segment
@@ -48,13 +42,13 @@ class CttParser {
     private static function setContentType(&$item, $key){
         switch ($key){
             case 0:
-                $item = [self::CTT_00 => $item];
+                $item = [self::IEA_00 => $item];
                 break;
             case 1:
-                $item = [self::CTT_01 => $item];
+                $item = [self::IEA_01 => $item];
                 break;
             case 2:
-                $item = [self::CTT_02 => $item];
+                $item = [self::IEA_02 => $item];
                 break;
             default:
                 break;

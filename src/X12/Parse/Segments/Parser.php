@@ -1,17 +1,17 @@
 <?php
 
-namespace Aonach\X12\Segments;
+namespace Aonach\X12\Parse\Segments;
 
-use Aonach\X12\Segments\IsaParser;
-use Aonach\X12\Segments\GsParser;
-use Aonach\X12\Segments\StParser;
-use Aonach\X12\Segments\BegParser;
-use Aonach\X12\Segments\N1Parser;
-use Aonach\X12\Segments\Po1Parser;
-use Aonach\X12\Segments\CttParser;
-use Aonach\X12\Segments\SeParser;
-use Aonach\X12\Segments\GeParser;
-use Aonach\X12\Segments\IeaParser;
+use Aonach\X12\Parse\Segments\IsaParser;
+use Aonach\X12\Parse\Segments\GsParser;
+use Aonach\X12\Parse\Segments\StParser;
+use Aonach\X12\Parse\Segments\BegParser;
+use Aonach\X12\Parse\Segments\N1Parser;
+use Aonach\X12\Parse\Segments\Po1Parser;
+use Aonach\X12\Parse\Segments\CttParser;
+use Aonach\X12\Parse\Segments\SeParser;
+use Aonach\X12\Parse\Segments\GeParser;
+use Aonach\X12\Parse\Segments\IeaParser;
 
 
 

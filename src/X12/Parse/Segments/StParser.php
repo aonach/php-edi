@@ -1,10 +1,10 @@
 <?php
 
-namespace Aonach\X12\Segments;
+namespace Aonach\X12\Parse\Segments;
 
 /**
  * Class StParser
- * @package Aonach\X12\Segments
+ * @package Aonach\X12\Parse\Segments
  */
 class StParser {
 
