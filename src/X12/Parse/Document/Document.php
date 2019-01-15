@@ -1,6 +1,6 @@
 <?php
 
-namespace Aonach\X12\Document;
+namespace Aonach\X12\Parse\Document;
 
 class Document {
     private $segments = array();
