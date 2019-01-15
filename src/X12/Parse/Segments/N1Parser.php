@@ -3,37 +3,35 @@
 namespace Aonach\X12\Parse\Segments;
 
 /**
- * Class StParser
+ * Class N1Parser
  * @package Aonach\X12\Parse\Segments
  */
-class N1Parser {
+class N1Parser implements SegmentParserInterface {
 
     /**
-     *
+     * N1 represents several data elements including entity identifier code, name, identification code qualifier, and identification code.
      */
-    const N1_00 = 'some_elements_representation';//N1 represents several data elements including entity identifier code, name, identification code qualifier, and identification code.
+    const N1_00 = 'some_elements_representation';
 
     /**
-     *
+     * Entity Identifier Code - Code identifying an organizational entity, a physical location, property or an individual / ST Ship To
      */
-    const N1_01 = 'entity_identifier_code'; //Entity Identifier Code - Code identifying an organizational entity, a physical location, property or an individual / ST Ship To
+    const N1_01 = 'entity_identifier_code';
 
     /**
-     *
+     * Free-form name
      */
-    const N1_02 = 'name'; //Free-form name
+    const N1_02 = 'name';
 
     /**
-     *
+     * Identification Code Qualifier - Code designating the system/method of code structure used for Identification Code (67)
      */
-    const N1_03 = 'identification_code_qualifier'; //Identification Code Qualifier - Code designating the system/method of code structure used for Identification Code (67)
+    const N1_03 = 'identification_code_qualifier';
 
     /**
-     *
+     * Identification Code -  Code identifying a party or other code
      */
-    const N1_04 = 'identification_code'; //Identification Code -  Code identifying a party or other code
-
-
+    const N1_04 = 'identification_code';
 
     /**
      * @param $segment

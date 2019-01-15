@@ -3,51 +3,54 @@
 namespace Aonach\X12\Parse\Segments;
 
 /**
- * Class StParser
+ * Class BegParser
  * @package Aonach\X12\Parse\Segments
  */
-class BegParser implements SegmentParserInterface {
+class BegParser implements SegmentParserInterface
+{
 
     /**
-     *
+     * ST represents the beginning segment of the purchase order.
      */
-    const BEG_00 = 'beginning_segment_po';//ST represents the beginning segment of the purchase order.
+    const BEG_00 = 'beginning_segment_po';
 
     /**
-     *
+     * Transaction Set Purpose Code - 00 represents a new purchase order.
      */
-    const BEG_01 = 'transaction_purpose_code'; //Transaction Set Purpose Code - 00 represents a new purchase order.
+    const BEG_01 = 'transaction_purpose_code';
 
     /**
-     *
+     * Purchase Order Type Code - DS Dropship / SA Stand-alone Order
      */
-    const BEG_02 = 'purchase_order_type'; //Purchase Order Type Code - DS Dropship / SA Stand-alone Order
+    const BEG_02 = 'purchase_order_type';
 
     /**
-     *
+     * Identifying number for Purchase Order assigned by the orderer/purchaser
      */
-    const BEG_03 = 'purchase_order_number'; //Identifying number for Purchase Order assigned by the orderer/purchaser
+    const BEG_03 = 'purchase_order_number';
 
     /**
-     *
+     * Number identifying a release against a Purchase Order previously placed by the parties involved in the transaction
      */
-    const BEG_04 = 'release_number'; //Number identifying a release against a Purchase Order previously placed by the parties involved in the transaction
+    const BEG_04 = 'release_number';
 
     /**
-     *
+     * Date of issuance
      */
     const BEG_05 = 'date_of_issuance';
 
 
-
     /**
+     * Parse the segment
+     *
      * @param $segment
      * @return array
      */
-    public static function parse($segment){
+    public static function parse($segment)
+    {
         $content = array();
-        array_walk_recursive($segment,'self::setContentType');
-        foreach ($segment as $key => $item){
+        array_walk_recursive($segment, 'self::setContentType');
+        foreach ($segment as $key => $item) {
             $content[key($item)] = $item[key($item)];
         }
 
@@ -56,11 +59,13 @@ class BegParser implements SegmentParserInterface {
 
     /**
      * Set the the key to a meaningfull value.
+     *
      * @param $item
      * @param $key
      */
-    private static function setContentType(&$item, $key){
-        switch ($key){
+    private static function setContentType(&$item, $key)
+    {
+        switch ($key) {
             case 0:
                 $item = [self::BEG_00 => $item];
                 break;

@@ -6,7 +6,8 @@ namespace Aonach\X12\Parse\Segments;
  * Class IsaParser
  * @package Aonach\X12\Parse\Segments
  */
-class IsaParser {
+class IsaParser implements SegmentParserInterface
+{
 
     /**
      * ISA represents interchange control header.
@@ -99,10 +100,11 @@ class IsaParser {
      * @param $segment
      * @return array
      */
-    public static function parse($segment){
+    public static function parse($segment)
+    {
         $content = array();
-        array_walk_recursive($segment,'self::setContentType');
-        foreach ($segment as $key => $item){
+        array_walk_recursive($segment, 'self::setContentType');
+        foreach ($segment as $key => $item) {
             $content[key($item)] = $item[key($item)];
         }
 
@@ -114,8 +116,9 @@ class IsaParser {
      * @param $item
      * @param $key
      */
-    private static function setContentType(&$item, $key){
-        switch ($key){
+    private static function setContentType(&$item, $key)
+    {
+        switch ($key) {
             case 0:
                 $item = [self::ISA_00 => $item];
                 break;

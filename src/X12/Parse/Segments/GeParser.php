@@ -1,34 +1,37 @@
 <?php
+
 namespace Aonach\X12\Parse\Segments;
 
 /**
  * Class GeParser
  * @package Aonach\X12\Parse\Segments
  */
-class GeParser {
+class GeParser implements SegmentParserInterface
+{
     /**
-     *
+     * To indicate the end of a functional group and to provide control information
      */
-    const GE_00 = 'end_group'; //To indicate the end of a functional group and to provide control information
+    const GE_00 = 'end_group';
 
     /**
-     *
+     * Number of Transaction Sets Included - Total number of transaction sets included in the functional group or interchange (transmission) group terminated by the trailer containing this data element
      */
-    const GE_01 = 'number_of_transactions'; //Number of Transaction Sets Included - Total number of transaction sets included in the functional group or interchange (transmission) group terminated by the trailer containing this data element
+    const GE_01 = 'number_of_transactions';
 
     /**
-     *
+     * Group Control Number -  Assigned number originated and maintained by the sender
      */
-    const GE_02 = 'ge_group_control_number'; // Group Control Number -  Assigned number originated and maintained by the sender
+    const GE_02 = 'ge_group_control_number';
 
     /**
      * @param $segment
      * @return array
      */
-    public static function parse($segment){
+    public static function parse($segment)
+    {
         $content = array();
-        array_walk_recursive($segment,'self::setContentType');
-        foreach ($segment as $key => $item){
+        array_walk_recursive($segment, 'self::setContentType');
+        foreach ($segment as $key => $item) {
             $content[key($item)] = $item[key($item)];
         }
 
@@ -40,8 +43,9 @@ class GeParser {
      * @param $item
      * @param $key
      */
-    private static function setContentType(&$item, $key){
-        switch ($key){
+    private static function setContentType(&$item, $key)
+    {
+        switch ($key) {
             case 0:
                 $item = [self::GE_00 => $item];
                 break;

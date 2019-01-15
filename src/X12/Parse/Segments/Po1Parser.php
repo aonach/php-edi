@@ -6,67 +6,68 @@ namespace Aonach\X12\Parse\Segments;
  * Class Po1Parser
  * @package Aonach\X12\Parse\Segments
  */
-class Po1Parser {
-
-
-    /**
-     *
-     */
-    const PO1_00 = 'baseline_item_data'; // To specify basic and most frequently used line item data
+class Po1Parser implements SegmentParserInterface
+{
 
     /**
-     *
+     * To specify basic and most frequently used line item data
      */
-    const PO1_01 = 'assigned_identification'; //Assigned Identification - Alphanumeric characters assigned for differentiation within a transaction set - This is the line item number that must be returned on subsequent documents to Insight such as the 855, 856, 810 and 870.
+    const PO1_00 = 'baseline_item_data';
 
     /**
-     *
+     * Assigned Identification - Alphanumeric characters assigned for differentiation within a transaction set - This is the line item number that must be returned on subsequent documents to Insight such as the 855, 856, 810 and 870.
      */
-    const PO1_02 = 'quantity_ordered'; //Quantity Ordered
+    const PO1_01 = 'assigned_identification';
 
     /**
-     *
+     * Quantity Ordered
      */
-    const PO1_03 = 'measurement_code'; //Unit or Basis for Measurement Code - Code specifying the units in which a value is being expressed, or manner in which a measurement has been taken - EA-Each, DZ- Dozen
+    const PO1_02 = 'quantity_ordered';
 
     /**
-     *
+     * Unit or Basis for Measurement Code - Code specifying the units in which a value is being expressed, or manner in which a measurement has been taken - EA-Each, DZ- Dozen
      */
-    const PO1_04 = 'unit_price'; //Unit Price -  Price per unit of product, service, commodity, etc.
+    const PO1_03 = 'measurement_code';
 
     /**
-     *
+     * Unit Price -  Price per unit of product, service, commodity, etc.
      */
-    const PO1_05 = 'base_unit_price_code'; //Basis of Unit Price Code - Code identifying the type of unit price for an item - CP Current Price (Subject to Change)
+    const PO1_04 = 'unit_price';
 
     /**
-     *
+     * Basis of Unit Price Code - Code identifying the type of unit price for an item - CP Current Price (Subject to Change)
      */
-    const PO1_06 = 'buyer_product_id_qualifier'; // Qualifier for Buyer - Code identifying the type/source of the descriptive number used in Product/Service ID (234) - BP Buyer's Part Number
+    const PO1_05 = 'base_unit_price_code';
 
     /**
-     *
+     * Qualifier for Buyer - Code identifying the type/source of the descriptive number used in Product/Service ID (234) - BP Buyer's Part Number
      */
-    const PO1_07 = 'buyer_product_id'; //Buyer Item Number - Identifying number for a product or service
+    const PO1_06 = 'buyer_product_id_qualifier';
 
     /**
-     *
+     * Buyer Item Number - Identifying number for a product or service
      */
-    const PO1_08 = 'vendor_product_id_qualifier'; //Qualifier for Vendor - Identifying number for a product or service - VP Vendor's (Seller's) Part Number
+    const PO1_07 = 'buyer_product_id';
 
     /**
-     *
+     * Qualifier for Vendor - Identifying number for a product or service - VP Vendor's (Seller's) Part Number
      */
-    const PO1_09 = 'vendor_product_id'; //Vendor Item Number - Identifying number for a product or service
+    const PO1_08 = 'vendor_product_id_qualifier';
+
+    /**
+     * Vendor Item Number - Identifying number for a product or service
+     */
+    const PO1_09 = 'vendor_product_id';
 
     /**
      * @param $segment
      * @return array
      */
-    public static function parse($segment){
+    public static function parse($segment)
+    {
         $content = array();
-        array_walk_recursive($segment,'self::setContentType');
-        foreach ($segment as $key => $item){
+        array_walk_recursive($segment, 'self::setContentType');
+        foreach ($segment as $key => $item) {
             $content[key($item)] = $item[key($item)];
         }
 
@@ -78,8 +79,9 @@ class Po1Parser {
      * @param $item
      * @param $key
      */
-    private static function setContentType(&$item, $key){
-        switch ($key){
+    private static function setContentType(&$item, $key)
+    {
+        switch ($key) {
             case 0:
                 $item = [self::PO1_00 => $item];
                 break;

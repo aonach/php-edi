@@ -14,17 +14,23 @@ use Aonach\X12\Parse\Segments\GeParser;
 use Aonach\X12\Parse\Segments\IeaParser;
 
 
+/**
+ * Class Parser
+ * @package Aonach\X12\Parse\Segments
+ */
+class Parser
+{
 
-
-class Parser {
-
-
-
-    public static function parseAllSegments(array $documents) {
+    /**
+     * @param array $documents
+     * @return array
+     */
+    public static function parseAllSegments(array $documents)
+    {
         $documetParsed = array();
         foreach ($documents as $document) {
-            foreach ($document->getSegments() as $segment){
-                switch ($segment[0]){
+            foreach ($document->getSegments() as $segment) {
+                switch ($segment[0]) {
                     case 'ISA':
                         $documetParsed = array_merge_recursive($documetParsed, IsaParser::parse($segment));
                         break;
@@ -66,4 +72,3 @@ class Parser {
         return $documetParsed;
     }
 }
-?>

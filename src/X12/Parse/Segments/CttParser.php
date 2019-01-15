@@ -6,23 +6,23 @@ namespace Aonach\X12\Parse\Segments;
  * Class CTTParser
  * @package Aonach\X12\Parse\Segments
  */
-class CttParser {
+class CttParser implements SegmentParserInterface {
 
 
     /**
-     *
+     * To specify basic and most frequently used line item data
      */
-    const CTT_00 = 'baseline_item_data'; // To specify basic and most frequently used line item data
+    const CTT_00 = 'baseline_item_data';
 
     /**
-     *
+     * Number of Line Items - Total number of line items in the transaction set
      */
-    const CTT_01 = 'number_of_items'; //Number of Line Items - Total number of line items in the transaction set
+    const CTT_01 = 'number_of_items';
 
     /**
-     *
+     * Number of units - Total number of units ordered is also 1.
      */
-    const CTT_02 = 'number_of_units'; //Number of units - Total number of units ordered is also 1.
+    const CTT_02 = 'number_of_units';
 
 
 
