@@ -13,20 +13,39 @@ class TransactionTrailer implements SegmentGeneratorInterface
 {
 
     /**
-     * @var null
+     *
+     */
+    const SEGMENT_CODE = 'SE';
+
+    /**
+     * Total number of segments included in a transaction set including ST and SE segments
+     *
+     * @var null $numberIncludedSegments
      */
     private $numberIncludedSegments = null;
 
     /**
-     * @var null
+     * Identifying control number that must be unique within the transaction set functional group assigned by the originator for a
+     * transaction set The control number is assigned by the sender. It should be sequentially assigned within each functional
+     * group to aid in error recovery and research. The control number in the SE segment (SE02) must be identical to the control number
+     * in the ST segment for each transaction.
+     *
+     * @var null $transactionSetControlNumber
      */
     private $transactionSetControlNumber = null;
 
     /**
+     * @var null
+     */
+    private $data = null;
+
+    /**
      * TransactionTrailer constructor.
      */
-    public function __construct()
+    public function __construct($numberIncludedSegments = null, $transactionSetControlNumber = null)
     {
+        $this->setNumberIncludedSegments($numberIncludedSegments);
+        $this->setTransactionSetControlNumber($transactionSetControlNumber);
     }
 
     /**
@@ -34,7 +53,10 @@ class TransactionTrailer implements SegmentGeneratorInterface
      */
     public function build()
     {
-        // TODO: Implement build() method.
+        $this->setData([
+            (!is_null($this->getNumberIncludedSegments())) ? : '',
+            (!is_null($this->getTransactionSetControlNumber())) ? : ''
+        ]);
     }
 
     /**
@@ -42,7 +64,7 @@ class TransactionTrailer implements SegmentGeneratorInterface
      */
     public function __toString()
     {
-        // TODO: Implement __toString() method.
+        return (!is_null($this->getDAta())) ? implode('*', $this->getData()) : self::SEGMENT_CODE;
     }
 
     /**
@@ -76,4 +98,22 @@ class TransactionTrailer implements SegmentGeneratorInterface
     {
         $this->transactionSetControlNumber = $transactionSetControlNumber;
     }
+
+    /**
+     * @return null
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param null $data
+     */
+    public function setData($data): void
+    {
+        $this->data = $data;
+    }
+
+
 }
