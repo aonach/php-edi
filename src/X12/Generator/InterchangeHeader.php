@@ -7,8 +7,14 @@ namespace Aonach\X12\Generator;
  */
 class InterchangeHeader implements SegmentGeneratorInterface {
 
-    
-    const SEGMENTS_NUMBER = 16;
+    /**
+     * Segment code;
+     */
+    const SEGMENT_CODE = 'ISA';
+    /**
+     * Number of information in the segment.
+     */
+    const SEGMENT_SECTIONS_NUMBER = 16;
 
     /**
      *  Code to identify the type of information in the Authorization Information
@@ -17,7 +23,7 @@ class InterchangeHeader implements SegmentGeneratorInterface {
      *
      * @var $authorizationInformationQualifier string
      */
-    private $authorizationInformationQualifier;
+    private $authorizationInformationQualifier = null;
 
     /**
      *  Information used for additional identification or authorization of the interchange sender
@@ -25,14 +31,14 @@ class InterchangeHeader implements SegmentGeneratorInterface {
      *
      * @var $authorizationInformation string
      */
-    private $authorizationInformation;
+    private $authorizationInformation = null;
 
     /**
      *  Code to identify the type of information in the Security Information
      *
      * @var $securityInformationQualifier string
      */
-    private $securityInformationQualifier;
+    private $securityInformationQualifier = null;
 
     /**
      * This is used for identifying the security information about the interchange sender or the data
@@ -40,7 +46,7 @@ class InterchangeHeader implements SegmentGeneratorInterface {
      *
      * @var $securityInformation string
      */
-    private $securityInformation;
+    private $securityInformation = null;
 
     /**
      * Qualifier to designate the system/method of code structure used
@@ -48,7 +54,7 @@ class InterchangeHeader implements SegmentGeneratorInterface {
      *
      * @var $interchangeIdQualifier string
      */
-    private $interchangeIdQualifier;
+    private $interchangeIdQualifier = null;
 
     /**
      * Identification code published by the sender for other parties to use as the receiver ID to route data to them;\
@@ -56,7 +62,7 @@ class InterchangeHeader implements SegmentGeneratorInterface {
      *
      * @var $interchangeSenderId string
      */
-    private $interchangeSenderId;
+    private $interchangeSenderId = null;
 
     /**
      * Identification code published by the receiver of the data;
@@ -66,33 +72,41 @@ class InterchangeHeader implements SegmentGeneratorInterface {
      *
      * @var $interchangeReceiverId string
      */
-    private $interchangeReceiverId;
+    private $interchangeReceiverId = null;
 
     /**
      * Date of the interchange
      *
      * @var $interchangeDate string
      */
-    private $interchangeDate;
+    private $interchangeDate = null;
+
+
+    /**
+     * Time of the interchange
+     *
+     * @var $interchangeTime null
+     */
+    private $interchangeTime = null;
 
     /**
      * @var $interchangeControlStandardsIdentifier string
      */
-    private $interchangeControlStandardsIdentifier;
+    private $interchangeControlStandardsIdentifier = null;
 
     /**
      * Code specifying the version number of the interchange control segments
      *
      * @var $interchangeControlVersionNumber string
      */
-    private $interchangeControlVersionNumber;
+    private $interchangeControlVersionNumber = null;
 
     /**
      *  A control number assigned by the interchange sender
      *
      * @var $interchangeControlNumber string
      */
-    private $interchangeControlNumber;
+    private $interchangeControlNumber = null;
 
     /**
      * Code sent by the sender to request an interchange acknowledgment (TA1)
@@ -101,7 +115,7 @@ class InterchangeHeader implements SegmentGeneratorInterface {
      *
      * @var $acknowledgmentRequested string
      */
-    private $acknowledgmentRequested;
+    private $acknowledgmentRequested = null;
 
     /**
      * Code to indicate whether data enclosed by this interchange envelope is test, production or information
@@ -111,7 +125,41 @@ class InterchangeHeader implements SegmentGeneratorInterface {
      *
      * @var $usageIndicator string
      */
-    private $usageIndicator;
+    private $usageIndicator = null;
+
+    /**
+     * @return null
+     */
+    public function getComponentElementSeparator()
+    {
+        return $this->componentElementSeparator;
+    }
+
+    /**
+     * @param null $componentElementSeparator
+     */
+    public function setComponentElementSeparator($componentElementSeparator): void
+    {
+        $this->componentElementSeparator = $componentElementSeparator;
+    }
+
+
+    /**
+     * Type is not applicable; the component element separator is a delimiter and not a data element; this field provides the delimiter used to
+     * separate component data elements within a composite data structure; this value must be different than the data element separator and the
+     * segment terminator
+     *
+     * @var $componentElementSeparator null
+     */
+    private $componentElementSeparator = null;
+
+
+    /**
+     * Hold the actual data for the segment
+     *
+     * @var $data null
+     */
+    private $data = null;
 
 
     /**
@@ -125,15 +173,77 @@ class InterchangeHeader implements SegmentGeneratorInterface {
         $this->setInterchangeReceiverId($interchangeReceiverId);
     }
 
+
     /**
-     * return
-     * @return mixed|void
+     * Build segment data
+     *
+     * @return mixed|null
      */
     public function build()
     {
-        for ($i = 1; $i <= self::SEGMENTS_NUMBER; $i++){
+        $this->setData([
+            self::SEGMENT_CODE,
+            (!is_null($this->getAuthorizationInformationQualifier())) ? : '',
+            (!is_null($this->getAuthorizationInformation())) ? : '',
+            (!is_null($this->getSecurityInformationQualifier())) ? : '',
+            (!is_null($this->getSecurityInformation())) ? : '',
+            (!is_null($this->getInterchangeIdQualifier())) ? '',
+            (!is_null($this->getInterchangeSenderId())) ? : '',
+            (!is_null($this->getInterchangeIdQualifier())) ? : '',
+            (!is_null($this->getInterchangeReceiverId())) ? : '',
+            (!is_null($this->getInterchangeDate())) ? : '',
+            (!is_null($this->getInterchangeTime())) ? : '',
+            (!is_null($this->getInterchangeControlStandardsIdentifier())) ? : '',
+            (!is_null($this->getInterchangeControlVersionNumber())) ? : '',
+            (!is_null($this->getInterchangeControlNumber())) ? : '',
+            (!is_null($this->getAcknowledgmentRequested())) ? : '',
+            (!is_null($this->getUsageIndicator())) ? : '',
+            (!is_null($this->getComponentElementSeparator())) ? : ''
+        ]);
 
-        }
+        return $this->getData();
+    }
+
+    /**
+     * Convert to string segment content to be used in the 855 file
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return (!is_null($this->getData())) ? implode('*', $this->getData()) : self::SEGMENT_CODE;
+    }
+
+    /**
+     * @return null
+     */
+    public function getInterchangeTime()
+    {
+        return $this->interchangeTime;
+    }
+
+    /**
+     * @param null $interchangeTime
+     */
+    public function setInterchangeTime($interchangeTime): void
+    {
+        $this->interchangeTime = $interchangeTime;
+    }
+
+    /**
+     * @return null
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param null $data
+     */
+    public function setData($data): void
+    {
+        $this->data = $data;
     }
 
     /**
@@ -343,5 +453,4 @@ class InterchangeHeader implements SegmentGeneratorInterface {
     {
         $this->usageIndicator = $usageIndicator;
     }
-
 }

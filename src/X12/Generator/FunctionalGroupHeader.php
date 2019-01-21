@@ -11,6 +11,16 @@ use Aonach\X12\Generator\SegmentGeneratorInterface;
 class FunctionalGroupHeader implements SegmentGeneratorInterface
 {
 
+
+    /**
+     * Segment code;
+     */
+    const SEGMENT_CODE = 'GS';
+    /**
+     * Number of information in the segment.
+     */
+    const SEGMENT_SECTIONS_NUMBER = 8;
+
     /**
      * Code identifying a group of application related transaction sets
      *
@@ -18,27 +28,28 @@ class FunctionalGroupHeader implements SegmentGeneratorInterface
      *
      * @var $functionalIdentifierCode string
      */
-    private $functionalIdentifierCode;
+    private $functionalIdentifierCode = null;
 
     /**
      * Code identifying party sending transmission; codes agreed to by trading partners
      *
      * @var $applicationSenderCode string
      */
-    private $applicationSenderCode;
+    private $applicationSenderCode = null;
 
     /**
      * Code identifying party receiving transmission; codes agreed to by trading partners
      *
      * @var $applicationReceiverCode string
      */
-    private $applicationReceiverCode;
+    private $applicationReceiverCode = null;
 
     /**
      * Date expressed as CCYYMMDD
+     *
      * @var $date string
      */
-    private $date;
+    private $date = null;
 
     /**
      * Time expressed in 24-hour clock time as follows: HHMM, or HHMMSS, or HHMMSSD, or
@@ -48,13 +59,13 @@ class FunctionalGroupHeader implements SegmentGeneratorInterface
      *
      * @var $time string
      */
-    private $time;
+    private $time = null;
 
     /**
      *  Assigned number originated and maintained by the sender
      * @var $groupControlNumber int
      */
-    private $groupControlNumber;
+    private $groupControlNumber = null;
 
     /**
      * Code identifying the issuer of the standard; this code is used in conjunction with Data
@@ -64,7 +75,7 @@ class FunctionalGroupHeader implements SegmentGeneratorInterface
      *
      * @var $responsibleAgencyCode string
      */
-    private $responsibleAgencyCode;
+    private $responsibleAgencyCode = null;
 
     /**
      * Code indicating the version, release, subrelease, and industry identifier of the EDI
@@ -78,7 +89,14 @@ class FunctionalGroupHeader implements SegmentGeneratorInterface
      *
      * @var $version string
      */
-    private $version;
+    private $version = null;
+
+    /**
+     * Hold the actual data for the segment
+     *
+     * @var $data null
+     */
+    private $data = null;
 
     /**
      * FunctionalGroupHeader constructor.
@@ -92,7 +110,25 @@ class FunctionalGroupHeader implements SegmentGeneratorInterface
      */
     public function build()
     {
-        // TODO: Implement build() method.
+        $this->setData([
+            self::SEGMENT_CODE,
+            (!is_null($this->getFunctionalIdentifierCode())) ? : '',
+            (!is_null($this->getApplicationSenderCode())) ? : '',
+            (!is_null($this->getApplicationReceiverCode())) ? : '',
+            (!is_null($this->getDate())) ? : '',
+            (!is_null($this->getTime())) ? : '',
+            (!is_null($this->getGroupControlNumber())) ? : '',
+            (!is_null($this->getResponsibleAgencyCode())) ? : '',
+            (!is_null($this->getVersion())) ? : '',
+        ]);
+    }
+
+    /**
+     * @return mixed|void
+     */
+    public function __toString()
+    {
+        return (!is_null($this->getData())) ? implode('*', $this->getData()) : self::SEGMENT_CODE;
     }
 
     /**
@@ -223,4 +259,19 @@ class FunctionalGroupHeader implements SegmentGeneratorInterface
         $this->version = $version;
     }
 
+    /**
+     * @return null
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param null $data
+     */
+    public function setData($data): void
+    {
+        $this->data = $data;
+    }
 }
