@@ -4,14 +4,24 @@ namespace Aonach\X12\Generator;
 
 use Aonach\X12\Generator\SegmentGeneratorInterface;
 
+/**
+ * Class TransactionSetHeader
+ * @package Aonach\X12\Generator
+ */
 class TransactionSetHeader implements SegmentGeneratorInterface
 {
 
+    /**
+     *
+     */
     const SEGMENT_CODE = 'ST';
+    /**
+     *
+     */
     const SEGMENT_SECTIONS_NUMBER = 2;
 
     /**
-     * Example : ST*855*852281220
+     *
      */
 
     /**

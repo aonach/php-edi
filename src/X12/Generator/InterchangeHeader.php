@@ -3,6 +3,10 @@ namespace Aonach\X12\Generator;
 
 /**
  * Class InterchangeHeader
+ *
+ * Example : ST*855*852281220
+ *
+ *
  * @package Aonach\X12\Generator
  */
 class InterchangeHeader implements SegmentGeneratorInterface {
