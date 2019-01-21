@@ -21,10 +21,6 @@ class TransactionSetHeader implements SegmentGeneratorInterface
     const SEGMENT_SECTIONS_NUMBER = 2;
 
     /**
-     *
-     */
-
-    /**
      *  Code uniquely identifying a Transaction Set
      *
      *      855         Purchase Order Acknowledgment
@@ -36,6 +32,11 @@ class TransactionSetHeader implements SegmentGeneratorInterface
     /**
      * Identifying control number that must be unique within the transaction set
      * functional group assigned by the originator for a transaction set
+     *
+     * The control number is assigned by the sender. It should be
+     * sequentially assigned within each functional group to aid in error
+     * recovery and research. The control number in the SE segment (SE02) must be
+     * identical to the control number in the ST segment for each transaction.
      *
      * @var $transactionSetControlNumber null
      */
@@ -50,7 +51,7 @@ class TransactionSetHeader implements SegmentGeneratorInterface
     /**
      * TransactionSetHeader constructor.
      */
-    public function __construct($transactionSetIdentifierCode = 855, $transactionSetControlNumber = nul)
+    public function __construct($transactionSetIdentifierCode = '855', $transactionSetControlNumber = null)
     {
         $this->setTransactionSetIdentifierCode($transactionSetIdentifierCode);
         $this->setTransactionSetControlNumber($transactionSetControlNumber);

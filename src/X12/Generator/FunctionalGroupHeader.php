@@ -11,7 +11,6 @@ use Aonach\X12\Generator\SegmentGeneratorInterface;
 class FunctionalGroupHeader implements SegmentGeneratorInterface
 {
 
-
     /**
      * Segment code;
      */

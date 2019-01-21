@@ -1,4 +1,5 @@
 <?php
+
 namespace Aonach\X12\Generator;
 
 /**
@@ -9,7 +10,8 @@ namespace Aonach\X12\Generator;
  *
  * @package Aonach\X12\Generator
  */
-class InterchangeHeader implements SegmentGeneratorInterface {
+class InterchangeHeader implements SegmentGeneratorInterface
+{
 
     /**
      * Segment code;
@@ -187,22 +189,22 @@ class InterchangeHeader implements SegmentGeneratorInterface {
     {
         $this->setData([
             self::SEGMENT_CODE,
-            (!is_null($this->getAuthorizationInformationQualifier())) ? : '',
-            (!is_null($this->getAuthorizationInformation())) ? : '',
-            (!is_null($this->getSecurityInformationQualifier())) ? : '',
-            (!is_null($this->getSecurityInformation())) ? : '',
+            (!is_null($this->getAuthorizationInformationQualifier())) ?: '',
+            (!is_null($this->getAuthorizationInformation())) ?: '',
+            (!is_null($this->getSecurityInformationQualifier())) ?: '',
+            (!is_null($this->getSecurityInformation())) ?: '',
             (!is_null($this->getInterchangeIdQualifier())) ? '',
-            (!is_null($this->getInterchangeSenderId())) ? : '',
-            (!is_null($this->getInterchangeIdQualifier())) ? : '',
-            (!is_null($this->getInterchangeReceiverId())) ? : '',
-            (!is_null($this->getInterchangeDate())) ? : '',
-            (!is_null($this->getInterchangeTime())) ? : '',
-            (!is_null($this->getInterchangeControlStandardsIdentifier())) ? : '',
-            (!is_null($this->getInterchangeControlVersionNumber())) ? : '',
-            (!is_null($this->getInterchangeControlNumber())) ? : '',
-            (!is_null($this->getAcknowledgmentRequested())) ? : '',
-            (!is_null($this->getUsageIndicator())) ? : '',
-            (!is_null($this->getComponentElementSeparator())) ? : ''
+            (!is_null($this->getInterchangeSenderId())) ?: '',
+            (!is_null($this->getInterchangeIdQualifier())) ?: '',
+            (!is_null($this->getInterchangeReceiverId())) ?: '',
+            (!is_null($this->getInterchangeDate())) ?: '',
+            (!is_null($this->getInterchangeTime())) ?: '',
+            (!is_null($this->getInterchangeControlStandardsIdentifier())) ?: '',
+            (!is_null($this->getInterchangeControlVersionNumber())) ?: '',
+            (!is_null($this->getInterchangeControlNumber())) ?: '',
+            (!is_null($this->getAcknowledgmentRequested())) ?: '',
+            (!is_null($this->getUsageIndicator())) ?: '',
+            (!is_null($this->getComponentElementSeparator())) ?: ''
         ]);
 
         return $this->getData();

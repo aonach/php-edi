@@ -35,11 +35,17 @@ class PurchaseOrderAcknowledgment implements SegmentGeneratorInterface
      *
      * @var null $transactionSetPurposeCode
      */
-    private $transactionSetPurposeCode = null;
+    private $transactionSetPurposeCode = '00';
 
     /**
      * Code specifying the type of acknowledgment
+     *      AC      Acknowledge - With Detail and Change
      *      AD      Acknowledge - With Detail, No Change
+     *      AE      Acknowledge - With Exception Detail Only
+     *      AK      Acknowledge - No Detail or Change
+     *      RD      Reject with Detail
+     *      RF      Reject with Exception Detail Only
+     *      RJ      Rejected - No Detail
      *
      * @var null $acknowledgmentType
      */
@@ -48,6 +54,9 @@ class PurchaseOrderAcknowledgment implements SegmentGeneratorInterface
     /**
      * Identifying number for Purchase Order assigned by the orderer/purchaser
      *
+     * Buyer's original purchase order number used to identify an order.
+     * Received in Purchase Order Number on the BEG segment of the 850 transaction.
+     *
      * @var null $purchaseOrderNumber
      */
     private $purchaseOrderNumber = null;
@@ -55,7 +64,9 @@ class PurchaseOrderAcknowledgment implements SegmentGeneratorInterface
 
     /**
      * Date expressed as CCYYMMDD
-     * 
+     *
+     * Buyer's purchase order date as received on the BEG segment in the 850 transaction.
+     *
      * @var null $date
      */
     private $date = null;
@@ -83,9 +94,8 @@ class PurchaseOrderAcknowledgment implements SegmentGeneratorInterface
     /**
      * PurchaseOrderAcknowledgment constructor.
      */
-    public function __construct($transactionSetPurposeCode = null, $acknowledgmentType = null, $purchaseOrderNumber = null, $date = null)
+    public function __construct($acknowledgmentType = null, $purchaseOrderNumber = null, $date = null)
     {
-        $this->setTransactionSetPurposeCode($transactionSetPurposeCode);
         $this->setAcknowledgmentType($acknowledgmentType);
         $this->setPurchaseOrderNumber($purchaseOrderNumber);
         $this->setDate($date);
@@ -98,11 +108,11 @@ class PurchaseOrderAcknowledgment implements SegmentGeneratorInterface
     {
         $this->setData([
             self::SEGMENT_CODE,
-            (!is_null($this->getTransactionSetPurposeCode())) ? : '',
-            (!is_null($this->getAcknowledgmentType())) ? : '',
-            (!is_null($this->getDate())) ? : '',
-            (!is_null($this->getReleaseNumber())) ? : '',
-            (!is_null($this->getContractNumber())) ? : ''
+            (!is_null($this->getTransactionSetPurposeCode())) ?: '',
+            (!is_null($this->getAcknowledgmentType())) ?: '',
+            (!is_null($this->getDate())) ?: '',
+            (!is_null($this->getReleaseNumber())) ?: '',
+            (!is_null($this->getContractNumber())) ?: ''
         ]);
     }
 
@@ -111,7 +121,7 @@ class PurchaseOrderAcknowledgment implements SegmentGeneratorInterface
      */
     public function __toString()
     {
-        return (!is_null($this->getData())) ? implode('*', $this->getData()): self::SEGMENT_CODE;
+        return (!is_null($this->getData())) ? implode('*', $this->getData()) : self::SEGMENT_CODE;
     }
 
     /**
