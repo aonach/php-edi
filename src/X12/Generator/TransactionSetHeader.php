@@ -63,9 +63,9 @@ class TransactionSetHeader implements SegmentGeneratorInterface
     public function build()
     {
         $this->setData([
-           self::SEGMENT_CODE,
-            (!is_null($this->getTransactionSetIdentifierCode())) ? : '',
-            (!is_null($this->getTransactionSetControlNumber()))? : '',
+            self::SEGMENT_CODE,
+            (!is_null($this->getTransactionSetIdentifierCode())) ? $this->getTransactionSetIdentifierCode() : '',
+            (!is_null($this->getTransactionSetControlNumber()))? $this->getTransactionSetControlNumber() : '',
         ]);
     }
 
@@ -74,7 +74,7 @@ class TransactionSetHeader implements SegmentGeneratorInterface
      */
     public function __toString()
     {
-        return (!is_null($this->.$this->getData())) ? implode('*', $this->getData()): self::SEGMENT_CODE;
+        return (!is_null($this->getData())) ? implode('*', $this->getData()): self::SEGMENT_CODE;
     }
 
     /**

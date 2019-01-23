@@ -25,28 +25,28 @@ class FunctionalGroupHeader implements SegmentGeneratorInterface
      *
      *      PR      Purchase Order Acknowledgement (855)
      *
-     * @var $functionalIdentifierCode string
+     * @var $functionalIdentifierCode
      */
-    private $functionalIdentifierCode = null;
+    private $functionalIdentifierCode = 'PR';
 
     /**
      * Code identifying party sending transmission; codes agreed to by trading partners
      *
-     * @var $applicationSenderCode string
+     * @var $applicationSenderCode
      */
     private $applicationSenderCode = null;
 
     /**
      * Code identifying party receiving transmission; codes agreed to by trading partners
      *
-     * @var $applicationReceiverCode string
+     * @var $applicationReceiverCode
      */
     private $applicationReceiverCode = null;
 
     /**
      * Date expressed as CCYYMMDD
      *
-     * @var $date string
+     * @var $date
      */
     private $date = null;
 
@@ -56,13 +56,13 @@ class FunctionalGroupHeader implements SegmentGeneratorInterface
      * DD = decimal seconds; decimal seconds are expressed as follows: D = tenths (0-9) and DD =
      * hundredths (00-99)
      *
-     * @var $time string
+     * @var $time
      */
     private $time = null;
 
     /**
      *  Assigned number originated and maintained by the sender
-     * @var $groupControlNumber int
+     * @var $groupControlNumber
      */
     private $groupControlNumber = null;
 
@@ -72,7 +72,7 @@ class FunctionalGroupHeader implements SegmentGeneratorInterface
      *
      *      X       Accredited Standards Committee X12
      *
-     * @var $responsibleAgencyCode string
+     * @var $responsibleAgencyCode
      */
     private $responsibleAgencyCode = null;
 
@@ -86,22 +86,24 @@ class FunctionalGroupHeader implements SegmentGeneratorInterface
      *
      *      004010      Draft Standards Approved for Publication by ASC X12 Procedures Review Board through October 1997
      *
-     * @var $version string
+     * @var $version
      */
     private $version = null;
 
     /**
      * Hold the actual data for the segment
      *
-     * @var $data null
+     * @var $data
      */
     private $data = null;
 
     /**
      * FunctionalGroupHeader constructor.
      */
-    public function __construct()
+    public function __construct($applicationSenderCode = null)
     {
+        $this->applicationSenderCode = $applicationSenderCode;
+
     }
 
     /**
@@ -111,14 +113,14 @@ class FunctionalGroupHeader implements SegmentGeneratorInterface
     {
         $this->setData([
             self::SEGMENT_CODE,
-            (!is_null($this->getFunctionalIdentifierCode())) ? : '',
-            (!is_null($this->getApplicationSenderCode())) ? : '',
-            (!is_null($this->getApplicationReceiverCode())) ? : '',
-            (!is_null($this->getDate())) ? : '',
-            (!is_null($this->getTime())) ? : '',
-            (!is_null($this->getGroupControlNumber())) ? : '',
-            (!is_null($this->getResponsibleAgencyCode())) ? : '',
-            (!is_null($this->getVersion())) ? : '',
+            (!is_null($this->getFunctionalIdentifierCode())) ? $this->getFunctionalIdentifierCode() : '',
+            (!is_null($this->getApplicationSenderCode())) ? $this->getApplicationSenderCode() : '',
+            (!is_null($this->getApplicationReceiverCode())) ? $this->getApplicationReceiverCode() : '',
+            (!is_null($this->getDate())) ? $this->getDate() : '',
+            (!is_null($this->getTime())) ? $this->getTime() : '',
+            (!is_null($this->getGroupControlNumber())) ? $this->getGroupControlNumber() : '',
+            (!is_null($this->getResponsibleAgencyCode())) ? $this->getResponsibleAgencyCode(): '',
+            (!is_null($this->getVersion())) ? $this->getVersion() : '',
         ]);
     }
 
@@ -131,135 +133,135 @@ class FunctionalGroupHeader implements SegmentGeneratorInterface
     }
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getFunctionalIdentifierCode(): string
+    public function getFunctionalIdentifierCode()
     {
         return $this->functionalIdentifierCode;
     }
 
     /**
-     * @param string $functionalIdentifierCode
+     * @param mixed $functionalIdentifierCode
      */
-    public function setFunctionalIdentifierCode(string $functionalIdentifierCode): void
+    public function setFunctionalIdentifierCode($functionalIdentifierCode): void
     {
         $this->functionalIdentifierCode = $functionalIdentifierCode;
     }
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getApplicationSenderCode(): string
+    public function getApplicationSenderCode()
     {
         return $this->applicationSenderCode;
     }
 
     /**
-     * @param string $applicationSenderCode
+     * @param mixed $applicationSenderCode
      */
-    public function setApplicationSenderCode(string $applicationSenderCode): void
+    public function setApplicationSenderCode($applicationSenderCode): void
     {
         $this->applicationSenderCode = $applicationSenderCode;
     }
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getApplicationReceiverCode(): string
+    public function getApplicationReceiverCode()
     {
         return $this->applicationReceiverCode;
     }
 
     /**
-     * @param string $applicationReceiverCode
+     * @param mixed $applicationReceiverCode
      */
-    public function setApplicationReceiverCode(string $applicationReceiverCode): void
+    public function setApplicationReceiverCode($applicationReceiverCode): void
     {
         $this->applicationReceiverCode = $applicationReceiverCode;
     }
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getDate(): string
+    public function getDate()
     {
         return $this->date;
     }
 
     /**
-     * @param string $date
+     * @param mixed $date
      */
-    public function setDate(string $date): void
+    public function setDate($date): void
     {
         $this->date = $date;
     }
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getTime(): string
+    public function getTime()
     {
         return $this->time;
     }
 
     /**
-     * @param string $time
+     * @param mixed $time
      */
-    public function setTime(string $time): void
+    public function setTime($time): void
     {
         $this->time = $time;
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getGroupControlNumber(): int
+    public function getGroupControlNumber()
     {
         return $this->groupControlNumber;
     }
 
     /**
-     * @param int $groupControlNumber
+     * @param mixed $groupControlNumber
      */
-    public function setGroupControlNumber(int $groupControlNumber): void
+    public function setGroupControlNumber($groupControlNumber): void
     {
         $this->groupControlNumber = $groupControlNumber;
     }
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getResponsibleAgencyCode(): string
+    public function getResponsibleAgencyCode()
     {
         return $this->responsibleAgencyCode;
     }
 
     /**
-     * @param string $responsibleAgencyCode
+     * @param mixed $responsibleAgencyCode
      */
-    public function setResponsibleAgencyCode(string $responsibleAgencyCode): void
+    public function setResponsibleAgencyCode($responsibleAgencyCode): void
     {
         $this->responsibleAgencyCode = $responsibleAgencyCode;
     }
 
     /**
-     * @return string
+     * @return mixed
      */
-    public function getVersion(): string
+    public function getVersion()
     {
         return $this->version;
     }
 
     /**
-     * @param string $version
+     * @param mixed $version
      */
-    public function setVersion(string $version): void
+    public function setVersion($version): void
     {
         $this->version = $version;
     }
 
     /**
-     * @return null
+     * @return mixed
      */
     public function getData()
     {
@@ -267,7 +269,7 @@ class FunctionalGroupHeader implements SegmentGeneratorInterface
     }
 
     /**
-     * @param null $data
+     * @param mixed $data
      */
     public function setData($data): void
     {
