@@ -27,7 +27,7 @@ class InterchangeHeader implements SegmentGeneratorInterface
      *       00        No Authorization Information Present (No Meaningful Information in I02)
      *       01        UCS Communications ID
      *
-     * @var $authorizationInformationQualifier string
+     * @var $authorizationInformationQualifier null
      */
     private $authorizationInformationQualifier = null;
 
@@ -35,14 +35,14 @@ class InterchangeHeader implements SegmentGeneratorInterface
      *  Information used for additional identification or authorization of the interchange sender
      *  or the data in the interchange; the type of information is set by the Authorization Information Qualifier (I01)
      *
-     * @var $authorizationInformation string
+     * @var $authorizationInformation null
      */
     private $authorizationInformation = null;
 
     /**
      *  Code to identify the type of information in the Security Information
      *
-     * @var $securityInformationQualifier string
+     * @var $securityInformationQualifier null
      */
     private $securityInformationQualifier = null;
 
@@ -50,7 +50,7 @@ class InterchangeHeader implements SegmentGeneratorInterface
      * This is used for identifying the security information about the interchange sender or the data
      * in the interchange; the type of information is set by the Security Information Qualifier (I03)
      *
-     * @var $securityInformation string
+     * @var $securityInformation null
      */
     private $securityInformation = null;
 
@@ -58,7 +58,7 @@ class InterchangeHeader implements SegmentGeneratorInterface
      * Qualifier to designate the system/method of code structure used
      * to designate the sender or receiver ID element being qualified
      *
-     * @var $interchangeIdQualifier string
+     * @var $interchangeIdQualifier null
      */
     private $interchangeIdQualifier = null;
 
@@ -66,7 +66,7 @@ class InterchangeHeader implements SegmentGeneratorInterface
      * Identification code published by the sender for other parties to use as the receiver ID to route data to them;\
      * the sender always codes this value in the sender ID element
      *
-     * @var $interchangeSenderId string
+     * @var $interchangeSenderId null
      */
     private $interchangeSenderId = null;
 
@@ -76,14 +76,14 @@ class InterchangeHeader implements SegmentGeneratorInterface
      * thus other parties sending to them will use this as a receiving
      * ID to route data to them
      *
-     * @var $interchangeReceiverId string
+     * @var $interchangeReceiverId null
      */
     private $interchangeReceiverId = null;
 
     /**
      * Date of the interchange
      *
-     * @var $interchangeDate string
+     * @var $interchangeDate null
      */
     private $interchangeDate = null;
 
@@ -96,21 +96,21 @@ class InterchangeHeader implements SegmentGeneratorInterface
     private $interchangeTime = null;
 
     /**
-     * @var $interchangeControlStandardsIdentifier string
+     * @var $interchangeControlStandardsIdentifier null
      */
     private $interchangeControlStandardsIdentifier = null;
 
     /**
      * Code specifying the version number of the interchange control segments
      *
-     * @var $interchangeControlVersionNumber string
+     * @var $interchangeControlVersionNumber null
      */
     private $interchangeControlVersionNumber = null;
 
     /**
      *  A control number assigned by the interchange sender
      *
-     * @var $interchangeControlNumber string
+     * @var $interchangeControlNumber null
      */
     private $interchangeControlNumber = null;
 
@@ -119,7 +119,7 @@ class InterchangeHeader implements SegmentGeneratorInterface
      *
      *      0       No Acknowledgment Requested
      *
-     * @var $acknowledgmentRequested string
+     * @var $acknowledgmentRequested null
      */
     private $acknowledgmentRequested = null;
 
@@ -129,7 +129,7 @@ class InterchangeHeader implements SegmentGeneratorInterface
      *      P       Production Data
      *      T       Test Data
      *
-     * @var $usageIndicator string
+     * @var $usageIndicator null
      */
     private $usageIndicator = null;
 
@@ -155,9 +155,9 @@ class InterchangeHeader implements SegmentGeneratorInterface
      * separate component data elements within a composite data structure; this value must be different than the data element separator and the
      * segment terminator
      *
-     * @var $componentElementSeparator null
+     * @var string $componentElementSeparator
      */
-    private $componentElementSeparator = null;
+    private $componentElementSeparator = '>';
 
 
     /**
@@ -171,7 +171,7 @@ class InterchangeHeader implements SegmentGeneratorInterface
     /**
      * InterchangeHeader constructor.
      */
-    public function __construct($authorizationInformation = null, $securityInformation = null, $interchangeSenderId = null, $interchangeReceiverId = null)
+    public function __construct($authorizationInformationQualifier = null, $authorizationInformation = null, $securityInformationQualifier = null, $securityInformation = null, $interchangeSenderId = '', $interchangeReceiverId = '')
     {
         $this->setAuthorizationInformation($authorizationInformation);
         $this->setSecurityInformation($securityInformation);
@@ -189,22 +189,22 @@ class InterchangeHeader implements SegmentGeneratorInterface
     {
         $this->setData([
             self::SEGMENT_CODE,
-            (!is_null($this->getAuthorizationInformationQualifier())) ?: '',
-            (!is_null($this->getAuthorizationInformation())) ?: '',
-            (!is_null($this->getSecurityInformationQualifier())) ?: '',
-            (!is_null($this->getSecurityInformation())) ?: '',
-            (!is_null($this->getInterchangeIdQualifier())) ? '',
-            (!is_null($this->getInterchangeSenderId())) ?: '',
-            (!is_null($this->getInterchangeIdQualifier())) ?: '',
-            (!is_null($this->getInterchangeReceiverId())) ?: '',
-            (!is_null($this->getInterchangeDate())) ?: '',
-            (!is_null($this->getInterchangeTime())) ?: '',
-            (!is_null($this->getInterchangeControlStandardsIdentifier())) ?: '',
-            (!is_null($this->getInterchangeControlVersionNumber())) ?: '',
-            (!is_null($this->getInterchangeControlNumber())) ?: '',
-            (!is_null($this->getAcknowledgmentRequested())) ?: '',
-            (!is_null($this->getUsageIndicator())) ?: '',
-            (!is_null($this->getComponentElementSeparator())) ?: ''
+            (!is_null($this->getAuthorizationInformationQualifier())) ? $this->getAuthorizationInformationQualifier() : '',
+            (!is_null($this->getAuthorizationInformation())) ? $this->getAuthorizationInformation() : '',
+            (!is_null($this->getSecurityInformationQualifier())) ? $this->getSecurityInformationQualifier() : '',
+            (!is_null($this->getSecurityInformation())) ? $this->getSecurityInformation() : '',
+            (!is_null($this->getInterchangeIdQualifier())) ? $this->getInterchangeIdQualifier() : '',
+            (!is_null($this->getInterchangeSenderId())) ? $this->getInterchangeSenderId() : '',
+            (!is_null($this->getInterchangeIdQualifier())) ? $this->getInterchangeIdQualifier() : '',
+            (!is_null($this->getInterchangeReceiverId())) ? $this->getInterchangeReceiverId() : '',
+            (!is_null($this->getInterchangeDate())) ? $this->getInterchangeDate() : '',
+            (!is_null($this->getInterchangeTime())) ? $this->getInterchangeTime() : '',
+            (!is_null($this->getInterchangeControlStandardsIdentifier())) ? $this->getInterchangeControlStandardsIdentifier() : '',
+            (!is_null($this->getInterchangeControlVersionNumber())) ? $this->getInterchangeControlVersionNumber() : '',
+            (!is_null($this->getInterchangeControlNumber())) ? $this->getInterchangeControlNumber() : '',
+            (!is_null($this->getAcknowledgmentRequested())) ? $this->getAcknowledgmentRequested() : '',
+            (!is_null($this->getUsageIndicator())) ? $this->getUsageIndicator() : '',
+            (!is_null($this->getComponentElementSeparator())) ? $this->getComponentElementSeparator() : ''
         ]);
 
         return $this->getData();
@@ -218,6 +218,134 @@ class InterchangeHeader implements SegmentGeneratorInterface
     public function __toString()
     {
         return (!is_null($this->getData())) ? implode('*', $this->getData()) : self::SEGMENT_CODE;
+    }
+
+    /**
+     * @return null
+     */
+    public function getAuthorizationInformationQualifier()
+    {
+        return $this->authorizationInformationQualifier;
+    }
+
+    /**
+     * @param null $authorizationInformationQualifier
+     */
+    public function setAuthorizationInformationQualifier($authorizationInformationQualifier): void
+    {
+        $this->authorizationInformationQualifier = $authorizationInformationQualifier;
+    }
+
+    /**
+     * @return null
+     */
+    public function getAuthorizationInformation()
+    {
+        return $this->authorizationInformation;
+    }
+
+    /**
+     * @param null $authorizationInformation
+     */
+    public function setAuthorizationInformation($authorizationInformation): void
+    {
+        $this->authorizationInformation = $authorizationInformation;
+    }
+
+    /**
+     * @return null
+     */
+    public function getSecurityInformationQualifier()
+    {
+        return $this->securityInformationQualifier;
+    }
+
+    /**
+     * @param null $securityInformationQualifier
+     */
+    public function setSecurityInformationQualifier($securityInformationQualifier): void
+    {
+        $this->securityInformationQualifier = $securityInformationQualifier;
+    }
+
+    /**
+     * @return null
+     */
+    public function getSecurityInformation()
+    {
+        return $this->securityInformation;
+    }
+
+    /**
+     * @param null $securityInformation
+     */
+    public function setSecurityInformation($securityInformation): void
+    {
+        $this->securityInformation = $securityInformation;
+    }
+
+    /**
+     * @return null
+     */
+    public function getInterchangeIdQualifier()
+    {
+        return $this->interchangeIdQualifier;
+    }
+
+    /**
+     * @param null $interchangeIdQualifier
+     */
+    public function setInterchangeIdQualifier($interchangeIdQualifier): void
+    {
+        $this->interchangeIdQualifier = $interchangeIdQualifier;
+    }
+
+    /**
+     * @return null
+     */
+    public function getInterchangeSenderId()
+    {
+        return $this->interchangeSenderId;
+    }
+
+    /**
+     * @param null $interchangeSenderId
+     */
+    public function setInterchangeSenderId($interchangeSenderId): void
+    {
+        $this->interchangeSenderId = $interchangeSenderId;
+    }
+
+    /**
+     * @return null
+     */
+    public function getInterchangeReceiverId()
+    {
+        return $this->interchangeReceiverId;
+    }
+
+    /**
+     * @param null $interchangeReceiverId
+     */
+    public function setInterchangeReceiverId($interchangeReceiverId): void
+    {
+        $this->interchangeReceiverId = $interchangeReceiverId;
+    }
+
+    /**
+     * @return null
+     */
+    public function getInterchangeDate()
+    {
+        return $this->interchangeDate;
+    }
+
+    /**
+     * @param null $interchangeDate
+     */
+    public function setInterchangeDate($interchangeDate): void
+    {
+        $this->interchangeDate = $interchangeDate;
     }
 
     /**
@@ -239,6 +367,86 @@ class InterchangeHeader implements SegmentGeneratorInterface
     /**
      * @return null
      */
+    public function getInterchangeControlStandardsIdentifier()
+    {
+        return $this->interchangeControlStandardsIdentifier;
+    }
+
+    /**
+     * @param null $interchangeControlStandardsIdentifier
+     */
+    public function setInterchangeControlStandardsIdentifier($interchangeControlStandardsIdentifier): void
+    {
+        $this->interchangeControlStandardsIdentifier = $interchangeControlStandardsIdentifier;
+    }
+
+    /**
+     * @return null
+     */
+    public function getInterchangeControlVersionNumber()
+    {
+        return $this->interchangeControlVersionNumber;
+    }
+
+    /**
+     * @param null $interchangeControlVersionNumber
+     */
+    public function setInterchangeControlVersionNumber($interchangeControlVersionNumber): void
+    {
+        $this->interchangeControlVersionNumber = $interchangeControlVersionNumber;
+    }
+
+    /**
+     * @return null
+     */
+    public function getInterchangeControlNumber()
+    {
+        return $this->interchangeControlNumber;
+    }
+
+    /**
+     * @param null $interchangeControlNumber
+     */
+    public function setInterchangeControlNumber($interchangeControlNumber): void
+    {
+        $this->interchangeControlNumber = $interchangeControlNumber;
+    }
+
+    /**
+     * @return null
+     */
+    public function getAcknowledgmentRequested()
+    {
+        return $this->acknowledgmentRequested;
+    }
+
+    /**
+     * @param null $acknowledgmentRequested
+     */
+    public function setAcknowledgmentRequested($acknowledgmentRequested): void
+    {
+        $this->acknowledgmentRequested = $acknowledgmentRequested;
+    }
+
+    /**
+     * @return null
+     */
+    public function getUsageIndicator()
+    {
+        return $this->usageIndicator;
+    }
+
+    /**
+     * @param null $usageIndicator
+     */
+    public function setUsageIndicator($usageIndicator): void
+    {
+        $this->usageIndicator = $usageIndicator;
+    }
+
+    /**
+     * @return null
+     */
     public function getData()
     {
         return $this->data;
@@ -250,213 +458,5 @@ class InterchangeHeader implements SegmentGeneratorInterface
     public function setData($data): void
     {
         $this->data = $data;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAuthorizationInformationQualifier(): string
-    {
-        return $this->authorizationInformationQualifier;
-    }
-
-    /**
-     * @param string $authorizationInformationQualifier
-     */
-    public function setAuthorizationInformationQualifier(string $authorizationInformationQualifier): void
-    {
-        $this->authorizationInformationQualifier = $authorizationInformationQualifier;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAuthorizationInformation(): string
-    {
-        return $this->authorizationInformation;
-    }
-
-    /**
-     * @param string $authorizationInformation
-     */
-    public function setAuthorizationInformation(string $authorizationInformation): void
-    {
-        $this->authorizationInformation = $authorizationInformation;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSecurityInformationQualifier(): string
-    {
-        return $this->securityInformationQualifier;
-    }
-
-    /**
-     * @param string $securityInformationQualifier
-     */
-    public function setSecurityInformationQualifier(string $securityInformationQualifier): void
-    {
-        $this->securityInformationQualifier = $securityInformationQualifier;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSecurityInformation(): string
-    {
-        return $this->securityInformation;
-    }
-
-    /**
-     * @param string $securityInformation
-     */
-    public function setSecurityInformation(string $securityInformation): void
-    {
-        $this->securityInformation = $securityInformation;
-    }
-
-    /**
-     * @return string
-     */
-    public function getInterchangeIdQualifier(): string
-    {
-        return $this->interchangeIdQualifier;
-    }
-
-    /**
-     * @param string $interchangeIdQualifier
-     */
-    public function setInterchangeIdQualifier(string $interchangeIdQualifier): void
-    {
-        $this->interchangeIdQualifier = $interchangeIdQualifier;
-    }
-
-    /**
-     * @return string
-     */
-    public function getInterchangeSenderId(): string
-    {
-        return $this->interchangeSenderId;
-    }
-
-    /**
-     * @param string $interchangeSenderId
-     */
-    public function setInterchangeSenderId(string $interchangeSenderId): void
-    {
-        $this->interchangeSenderId = $interchangeSenderId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getInterchangeReceiverId(): string
-    {
-        return $this->interchangeReceiverId;
-    }
-
-    /**
-     * @param string $interchangeReceiverId
-     */
-    public function setInterchangeReceiverId(string $interchangeReceiverId): void
-    {
-        $this->interchangeReceiverId = $interchangeReceiverId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getInterchangeDate(): string
-    {
-        return $this->interchangeDate;
-    }
-
-    /**
-     * @param string $interchangeDate
-     */
-    public function setInterchangeDate(string $interchangeDate): void
-    {
-        $this->interchangeDate = $interchangeDate;
-    }
-
-    /**
-     * @return string
-     */
-    public function getInterchangeControlStandardsIdentifier(): string
-    {
-        return $this->interchangeControlStandardsIdentifier;
-    }
-
-    /**
-     * @param string $interchangeControlStandardsIdentifier
-     */
-    public function setInterchangeControlStandardsIdentifier(string $interchangeControlStandardsIdentifier): void
-    {
-        $this->interchangeControlStandardsIdentifier = $interchangeControlStandardsIdentifier;
-    }
-
-    /**
-     * @return string
-     */
-    public function getInterchangeControlVersionNumber(): string
-    {
-        return $this->interchangeControlVersionNumber;
-    }
-
-    /**
-     * @param string $interchangeControlVersionNumber
-     */
-    public function setInterchangeControlVersionNumber(string $interchangeControlVersionNumber): void
-    {
-        $this->interchangeControlVersionNumber = $interchangeControlVersionNumber;
-    }
-
-    /**
-     * @return string
-     */
-    public function getInterchangeControlNumber(): string
-    {
-        return $this->interchangeControlNumber;
-    }
-
-    /**
-     * @param string $interchangeControlNumber
-     */
-    public function setInterchangeControlNumber(string $interchangeControlNumber): void
-    {
-        $this->interchangeControlNumber = $interchangeControlNumber;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAcknowledgmentRequested(): string
-    {
-        return $this->acknowledgmentRequested;
-    }
-
-    /**
-     * @param string $acknowledgmentRequested
-     */
-    public function setAcknowledgmentRequested(string $acknowledgmentRequested): void
-    {
-        $this->acknowledgmentRequested = $acknowledgmentRequested;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUsageIndicator(): string
-    {
-        return $this->usageIndicator;
-    }
-
-    /**
-     * @param string $usageIndicator
-     */
-    public function setUsageIndicator(string $usageIndicator): void
-    {
-        $this->usageIndicator = $usageIndicator;
     }
 }

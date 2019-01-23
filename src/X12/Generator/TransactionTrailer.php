@@ -54,8 +54,8 @@ class TransactionTrailer implements SegmentGeneratorInterface
     public function build()
     {
         $this->setData([
-            (!is_null($this->getNumberIncludedSegments())) ? : '',
-            (!is_null($this->getTransactionSetControlNumber())) ? : ''
+            (!is_null($this->getNumberIncludedSegments())) ? $this->getNumberIncludedSegments() : '',
+            (!is_null($this->getTransactionSetControlNumber())) ? $this->getTransactionSetControlNumber() : ''
         ]);
     }
 
