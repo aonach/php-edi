@@ -110,12 +110,9 @@ class Generator
         $fileContent[] = $this->getGsSegment()->__toString();
         $fileContent[] = $this->getStSegment()->__toString();
         $fileContent[] = $this->getBakSegment()->__toString();
-        foreach ($this->getPo1Segment() as $po1) {
-            $fileContent[] = $po1->__toString();
-        }
-
-        foreach ($this->getAckSegment() as $ack){
-            $fileContent[] = $ack->__toString();
+        for ($i = 0; $i < count($this->getPo1Segment()); $i++){
+            $fileContent[] = $this->getPo1Segment()[$i]->__toString();
+            $fileContent[] = $this->getAckSegment()[$i]->__toString();
         }
         $fileContent[] = $this->getStSegment()->__toString();
 
