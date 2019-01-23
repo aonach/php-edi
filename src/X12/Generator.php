@@ -19,7 +19,7 @@ class Generator
 {
 
     /**
-     * @var $isaSegment
+     * @var InterchangeHeader $isaSegment
      */
     private $isaSegment;
     /**
@@ -78,12 +78,12 @@ class Generator
         $this->stSegment = new TransactionSetHeader();
         $this->bakSegment =  new PurchaseOrderAcknowledgment();
 
-        foreach ($this->itemData as $item){
-            $this->po1Segment[] = new BaselineItemData();
-            $this->ackSegment[] = new LineItemAcknowledgement();
+        for ($i = 0; $i < count($this->getItemData()); $i++){
+            $this->po1Segment[] = new BaselineItemData($i, $this->getItemData()[$i]['quantity'],'EA', '0,00', $this->getItemData()[$i]['product_code']);
+            $this->ackSegment[] = new LineItemAcknowledgement($this->getItemData()[$i]['quantity'], 'EA');
         }
         
-        $this->stSegment = new TransactionTrailer($this->getNumberOfSegments());
+        $this->seSegment = new TransactionTrailer($this->getNumberOfSegments());
 
         return $this->__generate();
 
@@ -102,7 +102,7 @@ class Generator
             $ack->build();
         }
 
-        $this->getStSegment()->build();
+        $this->getSeSegment()->build();
         
         $fileContent = array();
 
@@ -114,7 +114,7 @@ class Generator
             $fileContent[] = $this->getPo1Segment()[$i]->__toString();
             $fileContent[] = $this->getAckSegment()[$i]->__toString();
         }
-        $fileContent[] = $this->getStSegment()->__toString();
+        $fileContent[] = $this->getSeSegment()->__toString();
 
         return implode('~', $fileContent);
 
