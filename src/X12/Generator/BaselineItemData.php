@@ -126,13 +126,13 @@ class BaselineItemData implements SegmentGeneratorInterface
     {
         $this->setData([
            self::SEGMENT_CODE,
-            (!is_null($this->getAssignedIdentification())) ? : '',
-            (!is_array($this->getQuantityOrdered())) ? : '',
-            (!is_null($this->getMeasurementCode())) ? : '',
-            (!is_null($this->getUnitPrice())) ? : '',
-            (!is_null($this->getBasisUnitPriceCode())) ? : '',
-            (!is_null($this->getProductIdQualifier())) ? : '',
-            (!is_null($this->getProductId())) ? : ''
+            (!is_null($this->getAssignedIdentification())) ? $this->getAssignedIdentification() : '',
+            (!is_null($this->getQuantityOrdered())) ? $this->getQuantityOrdered() : '',
+            (!is_null($this->getMeasurementCode())) ? $this->getMeasurementCode() : '',
+            (!is_null($this->getUnitPrice())) ? $this->getUnitPrice() : '',
+            (!is_null($this->getBasisUnitPriceCode())) ? $this->getBasisUnitPriceCode() : '',
+            (!is_null($this->getProductIdQualifier())) ? $this->getProductIdQualifier() : '',
+            (!is_null($this->getProductId())) ? $this->getProductId() : ''
         ]);
     }
 

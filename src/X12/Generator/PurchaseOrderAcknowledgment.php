@@ -108,11 +108,11 @@ class PurchaseOrderAcknowledgment implements SegmentGeneratorInterface
     {
         $this->setData([
             self::SEGMENT_CODE,
-            (!is_null($this->getTransactionSetPurposeCode())) ?: '',
-            (!is_null($this->getAcknowledgmentType())) ?: '',
-            (!is_null($this->getDate())) ?: '',
-            (!is_null($this->getReleaseNumber())) ?: '',
-            (!is_null($this->getContractNumber())) ?: ''
+            (!is_null($this->getTransactionSetPurposeCode())) ? $this->getTransactionSetPurposeCode() : '',
+            (!is_null($this->getAcknowledgmentType())) ? $this->getAcknowledgmentType() : '',
+            (!is_null($this->getDate())) ? $this->getDate() : '',
+            (!is_null($this->getReleaseNumber())) ? $this->getReleaseNumber() : '',
+            (!is_null($this->getContractNumber())) ? $this->getContractNumber() : ''
         ]);
     }
 
