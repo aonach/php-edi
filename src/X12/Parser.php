@@ -21,7 +21,7 @@ class Parser {
         $segments = array();
 
         if (!$res) {
-            throw new Exception('No resource or string passed to parse()');
+            throw new \Exception('No resource or string passed to parse()');
         }
 
         $documents = array();
@@ -29,15 +29,15 @@ class Parser {
             $res = $data;
             $meta = stream_get_meta_data($res);
             if (!$meta['seekable']) {
-                throw new Exception('Stream is not seekable');
+                throw new \Exception('Stream is not seekable');
             }
              
-            throw new Exception('Not implemented!');            
+            throw new \Exception('Not implemented!');            
         } else {
             $data = $res;
             // treat as string.
             if (strcasecmp(substr($data, 0, 3), 'ISA') != 0) {
-                throw new Exception('ISA segment not found in data stream');
+                throw new \Exception('ISA segment not found in data stream');
             }
          
             $segment_terminator = substr($data, self::SEGMENT_TERMINATOR_POSITION, 1);
