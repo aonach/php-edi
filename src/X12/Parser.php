@@ -1,22 +1,26 @@
 <?php
+
 namespace Aonach\X12;
 
 use Aonach\X12\Parse\Document\Document;
 
 /**
-* A class to parse ASC X12 EDI documents.  Currently the entire document is 
-* read into memory - this may change in future versions.
-*/
-class Parser {
-  
+ * A class to parse ASC X12 EDI documents.  Currently the entire document is
+ * read into memory - this may change in future versions.
+ */
+class Parser
+{
+
     const SEGMENT_TERMINATOR_POSITION = 105;
     const SUBELEMENT_SEPARATOR_POSITION = 104;
     const ELEMENT_SEPARATOR_POSITION = 3;
+
     /**
-    * Parse an EDI document. Data will be returned as an array of instances of
-    * EDI\Document. Document should contain exactly one ISA/IEA envelope.
-    */
-    public static function parse ($res) {
+     * Parse an EDI document. Data will be returned as an array of instances of
+     * EDI\Document. Document should contain exactly one ISA/IEA envelope.
+     */
+    public static function parse($res)
+    {
         $string = '';
         $segments = array();
 
@@ -31,15 +35,15 @@ class Parser {
             if (!$meta['seekable']) {
                 throw new \Exception('Stream is not seekable');
             }
-             
-            throw new \Exception('Not implemented!');            
+
+            throw new \Exception('Not implemented!');
         } else {
             $data = $res;
             // treat as string.
             if (strcasecmp(substr($data, 0, 3), 'ISA') != 0) {
                 throw new \Exception('ISA segment not found in data stream');
             }
-         
+
             $segment_terminator = substr($data, self::SEGMENT_TERMINATOR_POSITION, 1);
             $element_separator = substr($data, self::ELEMENT_SEPARATOR_POSITION, 1);
             $subelement_separator = substr($data, self::SUBELEMENT_SEPARATOR_POSITION, 1);
@@ -66,7 +70,7 @@ class Parser {
                 }
                 unset($element);
             }
-                        
+
             /* This is a ginormous switch statement, but necessarily so. 
             * The idea is that the parser will, for each transaction set
             * in the ISA envelope, create a new Document instance with 
@@ -74,13 +78,13 @@ class Parser {
             */
             switch ($identifier) {
                 case 'ISA':
-                    $current_isa = array( 'isa' => $elements );
+                    $current_isa = array('isa' => $elements);
                     break;
                 case 'GS':
-                    $current_gs = array( 'gs' => $elements );
+                    $current_gs = array('gs' => $elements);
                     break;
                 case 'ST':
-                    $current_st = array( 'st' => $elements );
+                    $current_st = array('st' => $elements);
                     break;
                 case 'SE':
                     assert($current_gs != null, 'GS data structure isset');
@@ -91,7 +95,7 @@ class Parser {
                     array_push($current_gs['txn_sets'], $current_st);
                     $current_st = null;
                     break;
-                case 'GE': 
+                case 'GE':
                     assert($current_isa != null, 'ST data structure isset');
                     $current_gs['ge'] = $elements;
                     if (!isset($current_isa['func_groups'])) {
@@ -106,19 +110,19 @@ class Parser {
                         foreach ($gs['txn_sets'] as $st) {
                             $segments = array_merge(
                                 array(
-                                    $current_isa['isa'], 
-                                    $gs['gs'], 
+                                    $current_isa['isa'],
+                                    $gs['gs'],
                                     $st['st']
                                 ),
                                 $st['segments'],
-                                array( 
+                                array(
                                     $st['se'],
                                     $gs['ge'],
                                     $current_isa['iea']
                                 )
                             );
                             $document = new Document($segments);
-                            array_push($documents, $document); 
+                            array_push($documents, $document);
                         }
                     }
                     break;
@@ -134,9 +138,9 @@ class Parser {
         return $documents;
     }
 
-    public static function parseFile ($file) {
+    public static function parseFile($file)
+    {
         $contents = file_get_contents($file);
         return parse($contents);
     }
 }
-?>

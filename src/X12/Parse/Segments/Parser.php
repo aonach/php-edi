@@ -12,7 +12,7 @@ use Aonach\X12\Parse\Segments\CttParser;
 use Aonach\X12\Parse\Segments\SeParser;
 use Aonach\X12\Parse\Segments\GeParser;
 use Aonach\X12\Parse\Segments\IeaParser;
-
+use Aonach\X12\Parse\Segments\DtmParser;
 
 /**
  * Class Parser
@@ -27,40 +27,42 @@ class Parser
      */
     public static function parseAllSegments(array $documents)
     {
-        $documetParsed = array();
+        $documentParsed = array();
         foreach ($documents as $document) {
             foreach ($document->getSegments() as $segment) {
                 switch ($segment[0]) {
                     case 'ISA':
-                        $documetParsed = array_merge_recursive($documetParsed, IsaParser::parse($segment));
+                        $documentParsed = array_merge_recursive($documentParsed, IsaParser::parse($segment));
                         break;
                     case 'GS';
-                        $documetParsed = array_merge_recursive($documetParsed, GsParser::parse($segment));
+                        $documentParsed = array_merge_recursive($documentParsed, GsParser::parse($segment));
                         break;
                     case 'ST';
-                        $documetParsed = array_merge_recursive($documetParsed, StParser::parse($segment));
+                        $documentParsed = array_merge_recursive($documentParsed, StParser::parse($segment));
                         break;
                     case 'BEG';
-                        $documetParsed = array_merge_recursive($documetParsed, BegParser::parse($segment));
+                        $documentParsed = array_merge_recursive($documentParsed, BegParser::parse($segment));
                         break;
                     case 'N1';
-                        $documetParsed = array_merge_recursive($documetParsed, N1Parser::parse($segment));
+                        $documentParsed = array_merge_recursive($documentParsed, N1Parser::parse($segment));
                         break;
                     case 'PO1';
-                        $documetParsed['po1'][] = Po1Parser::parse($segment);
+                        $documentParsed['po1'][] = Po1Parser::parse($segment);
                         break;
                     case 'CTT';
-                        $documetParsed = array_merge_recursive($documetParsed, CttParser::parse($segment));
+                        $documentParsed = array_merge_recursive($documentParsed, CttParser::parse($segment));
                         break;
                     case 'SE';
-                        $documetParsed = array_merge_recursive($documetParsed, SeParser::parse($segment));
+                        $documentParsed = array_merge_recursive($documentParsed, SeParser::parse($segment));
                         break;
                     case 'GE';
-                        $documetParsed = array_merge_recursive($documetParsed, GeParser::parse($segment));
+                        $documentParsed = array_merge_recursive($documentParsed, GeParser::parse($segment));
                         break;
                     case 'IEA';
-                        $documetParsed = array_merge_recursive($documetParsed, IeaParser::parse($segment));
+                        $documentParsed = array_merge_recursive($documentParsed, IeaParser::parse($segment));
                         break;
+                    case 'DTM';
+                        $documentParsed['dtm'][] = DtmParser::parse($segment);
                     default:
                         break;
 
@@ -69,6 +71,6 @@ class Parser
 
         }
 
-        return $documetParsed;
+        return $documentParsed;
     }
 }
