@@ -107,7 +107,7 @@ class Generator
 
         $this->gsSegment = new FunctionalGroupHeader();
         $this->stSegment = new TransactionSetHeader('855', $this->getExtraInformation()['855_data']->transaction_control_number);
-        $this->bakSegment =  new PurchaseOrderAcknowledgment($this->getExtraInformation()['acknowledgment_type'], $this->getExtraInformation()['855_data']->purchase_order_number, $this->getExtraInformation()['855_data']->date);
+        $this->bakSegment =  new PurchaseOrderAcknowledgment($this->getExtraInformation()['acknowledgment_type'], $this->getExtraInformation()['855_data']->purchase_order_number, $this->getExtraInformation()['855_data']->date_of_issuance);
 
         foreach ($this->productsData as $product) {
             $this->po1Segment[] = new BaselineItemData($product);
