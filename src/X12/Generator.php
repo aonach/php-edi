@@ -10,6 +10,8 @@ use Aonach\X12\Generator\LineItemAcknowledgement;
 use Aonach\X12\Generator\TransactionSetHeader;
 use Aonach\X12\Generator\SegmentGeneratorInterface;
 use Aonach\X12\Generator\TransactionTrailer;
+use Aonach\X12\Generator\Product;
+use Faker\Provider\Base;
 
 /**
  * Class Generator
@@ -39,6 +41,9 @@ class Generator
      */
     private $po1Segment;
 
+    /**
+     * @var
+     */
     private $ackSegment;
     /**
      * @var $seSegment
@@ -52,19 +57,45 @@ class Generator
     /**
      * @var $itemData
      */
-    private $itemData;
+    private $productsData;
+
+    /**
+     * @var
+     */
+    private $extraInformation;
+
+    /**
+     * @return mixed
+     */
+    public function getExtraInformation()
+    {
+        return $this->extraInformation;
+    }
+
+    /**
+     * @param mixed $extraInformation
+     */
+    public function setExtraInformation($extraInformation): void
+    {
+        $this->extraInformation = $extraInformation;
+    }
+
 
     /**
      * Generator constructor.
      */
-    public function __construct($isaData, $itemData)
+    public function __construct($isaData, array $products, $extraInformation)
     {
         $this->setIsaData($isaData);
-        $this->setItemData($itemData);
+        $this->setProductsData($products);
+        $this->setExtraInformation($extraInformation);
 
     }
 
 
+    /**
+     * @return string
+     */
     public function generate()
     {
         $this->isaSegment = new InterchangeHeader(
@@ -75,20 +106,23 @@ class Generator
         );
 
         $this->gsSegment = new FunctionalGroupHeader();
-        $this->stSegment = new TransactionSetHeader();
-        $this->bakSegment =  new PurchaseOrderAcknowledgment();
+        $this->stSegment = new TransactionSetHeader('855', $this->getExtraInformation()['855_data']->transaction_control_number);
+        $this->bakSegment =  new PurchaseOrderAcknowledgment($this->getExtraInformation()['acknowledgment_type'], $this->getExtraInformation()['855_data']->purchase_order_number, $this->getExtraInformation()['855_data']->date);
 
-        for ($i = 0; $i < count($this->getItemData()); $i++){
-            $this->po1Segment[] = new BaselineItemData($i, $this->getItemData()[$i]['quantity'],'EA', '0,00', $this->getItemData()[$i]['product_code']);
-            $this->ackSegment[] = new LineItemAcknowledgement($this->getItemData()[$i]['quantity'], 'EA');
+        foreach ($this->productsData as $product) {
+            $this->po1Segment[] = new BaselineItemData($product);
+            $this->ackSegment[] = new LineItemAcknowledgement($product);
         }
-        
+
         $this->seSegment = new TransactionTrailer($this->getNumberOfSegments());
 
         return $this->__generate();
 
     }
 
+    /**
+     * @return string
+     */
     private function __generate(){
         $this->getIsaSegment()->build();
         $this->getGsSegment()->build();
@@ -120,8 +154,12 @@ class Generator
 
 
     }
+
+    /**
+     * @return int
+     */
     public function getNumberOfSegments(){
-        return count($this->getItemData()) + 2;
+        return count($this->getProductsData()) + 2;
     }
 
     /**
@@ -239,22 +277,6 @@ class Generator
     /**
      * @return mixed
      */
-    public function getItemData()
-    {
-        return $this->itemData;
-    }
-
-    /**
-     * @param mixed $itemData
-     */
-    public function setItemData($itemData): void
-    {
-        $this->itemData = $itemData;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getAckSegment()
     {
         return $this->ackSegment;
@@ -268,4 +290,19 @@ class Generator
         $this->ackSegment = $ackSegment;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getProductsData()
+    {
+        return $this->productsData;
+    }
+
+    /**
+     * @param mixed $productsData
+     */
+    public function setProductsData($productsData): void
+    {
+        $this->productsData = $productsData;
+    }
 }
