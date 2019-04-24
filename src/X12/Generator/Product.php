@@ -2,29 +2,8 @@
 
 namespace Aonach\X12\Generator;
 
-use Aonach\X12\Generator\SegmentGeneratorInterface;
-use Aonach\X12\Generator\Product;
-
-
-/**
- * Class BaselineItemData
- *
- * Example:
- *      PO1*000000001*9*EA*26.76*NT*UP*637865247716~
- *
- * @package Aonach\X12\Generator
- */
-class BaselineItemData implements SegmentGeneratorInterface
+class Product
 {
-
-    /**
-     * Segment code;
-     */
-    const SEGMENT_CODE = 'PO1';
-    /**
-     * Number of information in the segment.
-     */
-    const SEGMENT_SECTIONS_NUMBER = 7;
 
     /**
      * Alphanumeric characters assigned for differentiation within a transaction set
@@ -52,7 +31,6 @@ class BaselineItemData implements SegmentGeneratorInterface
      */
     private $measurementCode = 'EA';
 
-
     /**
      * Price per unit of product, service, commodity, etc
      *
@@ -77,7 +55,6 @@ class BaselineItemData implements SegmentGeneratorInterface
      * @var null $basisUnitPriceCode
      */
     private $basisUnitPriceCode = null;
-
 
     /**
      * Code identifying the type/source of the descriptive number used in Product/Service ID (234)
@@ -104,48 +81,6 @@ class BaselineItemData implements SegmentGeneratorInterface
      * @var null $productId
      */
     private $productId = null;
-
-    /**
-     * @var null
-     */
-    private $data = null;
-
-    /**
-     * BaselineItemData constructor.
-     */
-    public function __construct(Product $product)
-    {
-        $this->setAssignedIdentification($product->getAssignedIdentification());
-        $this->setQuantityOrdered($product->getQuantityOrdered());
-        $this->setMeasurementCode($product->getMeasurementCode());
-        $this->setUnitPrice($product->getUnitPrice());
-        $this->setProductId($product->getProductId());
-    }
-
-    /**
-     * @return mixed
-     */
-    public function build()
-    {
-        $this->setData([
-            self::SEGMENT_CODE,
-            (!is_null($this->getAssignedIdentification())) ? $this->getAssignedIdentification() : '',
-            (!is_null($this->getQuantityOrdered())) ? $this->getQuantityOrdered() : '',
-            (!is_null($this->getMeasurementCode())) ? $this->getMeasurementCode() : '',
-            (!is_null($this->getUnitPrice())) ? $this->getUnitPrice() : '',
-            (!is_null($this->getBasisUnitPriceCode())) ? $this->getBasisUnitPriceCode() : '',
-            (!is_null($this->getProductIdQualifier())) ? $this->getProductIdQualifier() : '',
-            (!is_null($this->getProductId())) ? $this->getProductId() : ''
-        ]);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function __toString()
-    {
-        return (!is_null($this->getData())) ? implode('*', $this->getData()) : self::SEGMENT_CODE;
-    }
 
     /**
      * @return null
@@ -257,21 +192,5 @@ class BaselineItemData implements SegmentGeneratorInterface
     public function setProductId($productId): void
     {
         $this->productId = $productId;
-    }
-
-    /**
-     * @return null
-     */
-    public function getData()
-    {
-        return $this->data;
-    }
-
-    /**
-     * @param null $data
-     */
-    public function setData($data): void
-    {
-        $this->data = $data;
     }
 }

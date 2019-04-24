@@ -3,6 +3,8 @@
 namespace Aonach\X12\Generator;
 
 use Aonach\X12\Generator\SegmentGeneratorInterface;
+use Aonach\X12\Generator\Product;
+
 
 /**
  * Class LineItemAcknowledgement
@@ -75,10 +77,10 @@ class LineItemAcknowledgement implements SegmentGeneratorInterface
     /**
      * LineItemAcknowledgement constructor.
      */
-    public function __construct($quantity = 0, $basisMeasurementCode = 'EA')
+    public function __construct(Product $product)
     {
-        $this->setQuantity($quantity);
-        $this->setBasisMeasurementCode($basisMeasurementCode);
+        $this->setQuantity($product->getQuantityOrdered());
+        $this->setBasisMeasurementCode($product->getMeasurementCode());
     }
 
     /**
