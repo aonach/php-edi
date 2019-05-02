@@ -125,7 +125,7 @@ class FunctionalGroupHeader implements SegmentGeneratorInterface
     }
 
     /**
-     * @return mixed|void
+     * @return mixed|string
      */
     public function __toString()
     {

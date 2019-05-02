@@ -10,6 +10,7 @@ use Aonach\X12\Generator\LineItemAcknowledgement;
 use Aonach\X12\Generator\TransactionSetHeader;
 use Aonach\X12\Generator\SegmentGeneratorInterface;
 use Aonach\X12\Generator\TransactionTrailer;
+use Aonach\X12\Generator\Name;
 use Aonach\X12\Generator\Product;
 use Faker\Provider\Base;
 
@@ -24,18 +25,22 @@ class Generator
      * @var InterchangeHeader $isaSegment
      */
     private $isaSegment;
+
     /**
      * @var $gsSegment
      */
     private $gsSegment;
+
     /**
      * @var $stSegment
      */
     private $stSegment;
+
     /**
      * @var $bakSegment
      */
     private $bakSegment;
+
     /**
      * @var $po1Segment
      */
@@ -45,15 +50,22 @@ class Generator
      * @var
      */
     private $ackSegment;
+
     /**
      * @var $seSegment
      */
     private $seSegment;
 
     /**
+     * @var
+     */
+    private $nSegment;
+
+    /**
      * @var $isaData
      */
     private $isaData;
+
     /**
      * @var $itemData
      */
@@ -79,7 +91,6 @@ class Generator
     {
         $this->extraInformation = $extraInformation;
     }
-
 
     /**
      * Generator constructor.
@@ -108,6 +119,8 @@ class Generator
         $this->gsSegment = new FunctionalGroupHeader();
         $this->stSegment = new TransactionSetHeader('855', $this->getExtraInformation()['855_data']->transaction_control_number);
         $this->bakSegment =  new PurchaseOrderAcknowledgment($this->getExtraInformation()['acknowledgment_type'], $this->getExtraInformation()['855_data']->purchase_order_number, $this->getExtraInformation()['855_data']->date_of_issuance);
+//        $this->nSegment = new Name($this->getExtraInformation()['855_data']->entity_identifier_code, $this->getExtraInformation()['855_data']->name, $this->getExtraInformation()['855_data']->identification_code_qualifier, $this->getExtraInformation()['855_data']->identification_code);
+        $this->nSegment = new Name('SF', $this->getExtraInformation()['855_data']->name, '92', $this->getExtraInformation()['855_data']->identification_code);
 
         foreach ($this->productsData as $product) {
             $this->po1Segment[] = new BaselineItemData($product);
@@ -128,6 +141,8 @@ class Generator
         $this->getGsSegment()->build();
         $this->getStSegment()->build();
         $this->getBakSegment()->build();
+        $this->getNSegment()->build();
+
         foreach ($this->getPo1Segment() as $po1){
             $po1->build();
         }
@@ -144,6 +159,8 @@ class Generator
         $fileContent[] = $this->getGsSegment()->__toString();
         $fileContent[] = $this->getStSegment()->__toString();
         $fileContent[] = $this->getBakSegment()->__toString();
+        $fileContent[] = $this->getNSegment()->__toString();
+
         for ($i = 0; $i < count($this->getPo1Segment()); $i++){
             $fileContent[] = $this->getPo1Segment()[$i]->__toString();
             $fileContent[] = $this->getAckSegment()[$i]->__toString();
@@ -153,6 +170,22 @@ class Generator
         return implode('~', $fileContent);
 
 
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNSegment()
+    {
+        return $this->nSegment;
+    }
+
+    /**
+     * @param mixed $nSegment
+     */
+    public function setNSegment($nSegment): void
+    {
+        $this->nSegment = $nSegment;
     }
 
     /**
