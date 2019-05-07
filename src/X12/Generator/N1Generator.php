@@ -6,7 +6,7 @@ use Aonach\X12\Generator\SegmentGeneratorInterface;
 
 
 /**
- * Class Name
+ * Class N1Generator
  * @package Aonach\X12\Generator
  */
 class N1Generator implements SegmentGeneratorInterface
@@ -26,7 +26,7 @@ class N1Generator implements SegmentGeneratorInterface
     /**
      * @var
      */
-    private $entityIdentifierCode;
+    private $entityIdentifierCode = 'SF';
 
     /**
      * @var
@@ -36,7 +36,7 @@ class N1Generator implements SegmentGeneratorInterface
     /**
      * @var
      */
-    private $identificationCodeQualifier;
+    private $identificationCodeQualifier = '92';
 
     /**
      * @var
@@ -52,11 +52,9 @@ class N1Generator implements SegmentGeneratorInterface
     /**
      * Name constructor.
      */
-    public function __construct($entityIdentifierCode, $name, $identificationCodeQualifier, $identificationCode)
+    public function __construct($name, $identificationCode)
     {
-        $this->setEntityIdentifierCode($entityIdentifierCode);
         $this->setName($name);
-        $this->setIdentificationCodeQualifier($identificationCodeQualifier);
         $this->setIdentificationCode($identificationCode);
     }
 

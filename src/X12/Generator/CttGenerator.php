@@ -33,12 +33,24 @@ class CttGenerator implements SegmentGeneratorInterface
     private $data = null;
 
 
+    public function __construct($numberOfLineItems, $hashTotal)
+    {
+        $this->setNumberOfLineItems($numberOfLineItems);
+        $this->setHashTotal($hashTotal);
+    }
+
+
     /**
      * @return mixed|void
      */
     public function build()
     {
-        // TODO: Implement build() method.
+        $this->setData([
+                self::SEGMENT_CODE,
+                (!is_null($this->getNumberOfLineItems())) ? $this->getNumberOfLineItems() : '',
+                (!is_null($this->getHashTotal())) ? $this->getHashTotal() : '',
+            ]
+        );
     }
 
     /**
@@ -46,7 +58,7 @@ class CttGenerator implements SegmentGeneratorInterface
      */
     public function __toString()
     {
-        return 'string';
+        return (!is_null($this->getData())) ? implode('*', $this->getData()) : self::SEGMENT_CODE;
     }
 
     /**

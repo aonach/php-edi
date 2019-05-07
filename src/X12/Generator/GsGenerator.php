@@ -41,7 +41,7 @@ class GsGenerator implements SegmentGeneratorInterface
      *
      * @var $applicationReceiverCode
      */
-    private $applicationReceiverCode = null;
+    private $applicationReceiverCode = 'AMAZONDS';
 
     /**
      * Date expressed as CCYYMMDD
@@ -74,7 +74,7 @@ class GsGenerator implements SegmentGeneratorInterface
      *
      * @var $responsibleAgencyCode
      */
-    private $responsibleAgencyCode = null;
+    private $responsibleAgencyCode = 'X';
 
     /**
      * Code indicating the version, release, subrelease, and industry identifier of the EDI
@@ -88,7 +88,7 @@ class GsGenerator implements SegmentGeneratorInterface
      *
      * @var $version
      */
-    private $version = null;
+    private $version = '004010';
 
     /**
      * Hold the actual data for the segment
@@ -100,10 +100,12 @@ class GsGenerator implements SegmentGeneratorInterface
     /**
      * FunctionalGroupHeader constructor.
      */
-    public function __construct($applicationSenderCode = null)
+    public function __construct($applicationSenderCode = null, $date, $time, $groupControlNumber)
     {
-        $this->applicationSenderCode = $applicationSenderCode;
-
+        $this->setApplicationSenderCode($applicationSenderCode);
+        $this->setDate($date);
+        $this->setTime($time);
+        $this->setGroupControlNumber($groupControlNumber);
     }
 
     /**

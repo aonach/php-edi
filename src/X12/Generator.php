@@ -2,15 +2,18 @@
 
 namespace Aonach\X12;
 
-use Aonach\X12\Generator\BaselineItemData;
-use Aonach\X12\Generator\GsGenerator;
-use Aonach\X12\Generator\IsaGenerator;
-use Aonach\X12\Generator\BakGenerator;
 use Aonach\X12\Generator\AckGenerator;
-use Aonach\X12\Generator\StGenerator;
-use Aonach\X12\Generator\SegmentGeneratorInterface;
+use Aonach\X12\Generator\BakGenerator;
+use Aonach\X12\Generator\CttGenerator;
+use Aonach\X12\Generator\GeGenerator;
+use Aonach\X12\Generator\GsGenerator;
+use Aonach\X12\Generator\IeaGenerator;
+use Aonach\X12\Generator\IsaGenerator;
+use Aonach\X12\Generator\N1Generator;
+use Aonach\X12\Generator\Po1Generator;
 use Aonach\X12\Generator\SeGenerator;
-use Aonach\X12\Generator\Name;
+use Aonach\X12\Generator\StGenerator;
+
 use Aonach\X12\Generator\Product;
 use Faker\Provider\Base;
 
@@ -20,54 +23,58 @@ use Faker\Provider\Base;
  */
 class Generator
 {
-
     /**
-     * @var IsaGenerator $isaSegment
+     * @var
      */
-    private $isaSegment;
-
+    private $ackGenerator = array();
     /**
-     * @var $gsSegment
+     * @var
      */
-    private $gsSegment;
-
+    private $bakGenerator;
     /**
-     * @var $stSegment
+     * @var
      */
-    private $stSegment;
-
+    private $cttGenerator;
     /**
-     * @var $bakSegment
+     * @var
      */
-    private $bakSegment;
-
+    private $geGenerator;
     /**
-     * @var $po1Segment
+     * @var
      */
-    private $po1Segment;
+    private $gsGenerator;
+    /**
+     * @var
+     */
+    private $ieaGenerator;
+    /**
+     * @var
+     */
+    private $isaGenerator;
+    /**
+     * @var
+     */
+    private $n1Generator;
+    /**
+     * @var
+     */
+    private $po1Generator = array();
+    /**
+     * @var
+     */
+    private $seGenerator;
+    /**
+     * @var
+     */
+    private $stGenerator;
 
     /**
      * @var
      */
-    private $ackSegment;
-
-    /**
-     * @var $seSegment
-     */
-    private $seSegment;
+    private $settings;
 
     /**
      * @var
-     */
-    private $nSegment;
-
-    /**
-     * @var $isaData
-     */
-    private $isaData;
-
-    /**
-     * @var $itemData
      */
     private $productsData;
 
@@ -76,31 +83,15 @@ class Generator
      */
     private $extraInformation;
 
-    /**
-     * @return mixed
-     */
-    public function getExtraInformation()
-    {
-        return $this->extraInformation;
-    }
-
-    /**
-     * @param mixed $extraInformation
-     */
-    public function setExtraInformation($extraInformation): void
-    {
-        $this->extraInformation = $extraInformation;
-    }
 
     /**
      * Generator constructor.
      */
-    public function __construct($isaData, array $products, $extraInformation)
+    public function __construct($settings, array $products, $extraInformation)
     {
-        $this->setIsaData($isaData);
+        $this->setSettings($settings);
         $this->setProductsData($products);
         $this->setExtraInformation($extraInformation);
-
     }
 
 
@@ -109,25 +100,23 @@ class Generator
      */
     public function generate()
     {
-        $this->isaSegment = new IsaGenerator(
-            $this->isaData['amazon/authorization_qualifier'],
-            $this->isaData['amazon/authorization_information'],
-            $this->isaData['amazon/security_qualifier'],
-            $this->isaData['amazon/security_information']
-        );
+        //Initializing all segments.
 
-        $this->gsSegment = new GsGenerator();
-        $this->stSegment = new StGenerator('855', $this->getExtraInformation()['855_data']->transaction_control_number);
-        $this->bakSegment =  new BakGenerator($this->getExtraInformation()['acknowledgment_type'], $this->getExtraInformation()['855_data']->purchase_order_number, $this->getExtraInformation()['855_data']->date_of_issuance);
-//        $this->nSegment = new Name($this->getExtraInformation()['855_data']->entity_identifier_code, $this->getExtraInformation()['855_data']->name, $this->getExtraInformation()['855_data']->identification_code_qualifier, $this->getExtraInformation()['855_data']->identification_code);
-        $this->nSegment = new Name('SF', $this->getExtraInformation()['855_data']->name, '92', $this->getExtraInformation()['855_data']->identification_code);
+        $this->initIsaGenerator();
+        $this->initGsGenerator();
+        $this->initStGenerator();
+        $this->initBakGenerator();
+        $this->initN1Generator();
 
         foreach ($this->productsData as $product) {
-            $this->po1Segment[] = new BaselineItemData($product);
-            $this->ackSegment[] = new AckGenerator($product);
+            $this->setPo1Generator(new Po1Generator($product));
+            $this->setAckGenerator(new AckGenerator($product));
         }
 
-        $this->seSegment = new SeGenerator($this->getNumberOfSegments());
+        $this->initCttGenerator();
+        $this->initSeGenerator();
+        $this->initGeGenerator();
+
 
         return $this->__generate();
 
@@ -136,14 +125,15 @@ class Generator
     /**
      * @return string
      */
-    private function __generate(){
-        $this->getIsaSegment()->build();
-        $this->getGsSegment()->build();
-        $this->getStSegment()->build();
-        $this->getBakSegment()->build();
-        $this->getNSegment()->build();
+    private function __generate()
+    {
+        $this->getIsaGenerator()->build();
+        $this->getGsGenerator()->build();
+        $this->getStGenerator()->build();
+        $this->getBakGenerator()->build();
+        $this->getN1Generator()->build();
 
-        foreach ($this->getPo1Segment() as $po1){
+        foreach ($this->getPo1Segment() as $po1) {
             $po1->build();
         }
 
@@ -151,176 +141,347 @@ class Generator
             $ack->build();
         }
 
-        $this->getSeSegment()->build();
-        
+        $this->getCttGenerator()->build();
+        $this->getSeGenerator()->build();
+        $this->getGeGenerator()->build();
+
         $fileContent = array();
 
-        $fileContent[] = $this->getIsaSegment()->__toString();
-        $fileContent[] = $this->getGsSegment()->__toString();
-        $fileContent[] = $this->getStSegment()->__toString();
-        $fileContent[] = $this->getBakSegment()->__toString();
-        $fileContent[] = $this->getNSegment()->__toString();
+        $fileContent[] = $this->getIsaGenerator()->__toString();
+        $fileContent[] = $this->getGsGenerator()->__toString();
+        $fileContent[] = $this->getStGenerator()->__toString();
+        $fileContent[] = $this->getBakGenerator()->__toString();
+        $fileContent[] = $this->getN1Generator()->__toString();
 
-        for ($i = 0; $i < count($this->getPo1Segment()); $i++){
-            $fileContent[] = $this->getPo1Segment()[$i]->__toString();
-            $fileContent[] = $this->getAckSegment()[$i]->__toString();
+        for ($i = 0; $i < count($this->getPo1Segment()); $i++) {
+            $fileContent[] = $this->getPo1Generator()[$i]->__toString();
+            $fileContent[] = $this->getAckGenerator()[$i]->__toString();
         }
-        $fileContent[] = $this->getSeSegment()->__toString();
+        $fileContent[] = $this->getCttGenerator()->__toString();
+        $fileContent[] = $this->getSeGenerator()->__toString();
+        $fileContent[] = $this->getGeGenerator()->__toString();
 
         return implode('~', $fileContent);
-
-
     }
 
     /**
-     * @return mixed
+     *
      */
-    public function getNSegment()
+    private function initIsaGenerator()
     {
-        return $this->nSegment;
+        $this->setIsaGenerator(new IsaGenerator(
+            $this->getSettings()['amazon/authorization_qualifier'],
+            $this->getSettings()['amazon/authorization_information'],
+            $this->getSettings()['amazon/security_qualifier'],
+            $this->getSettings()['amazon/security_information'],
+            $this->getExtraInformation()['855_data']->interchange_receiver_id, // this will be used in the 'Interchange Sender's ID
+            $this->getSettings()['amazon/usage_indicator']
+        ));
+
+        $this->getIsaGenerator()->setInterchangeData($this->getExtraInformation()['855_data']->interchange_date);
+        $this->getIsaGenerator()->setInterchangeTime($this->getExtraInformation()['855_data']->interchange_time);
     }
 
     /**
-     * @param mixed $nSegment
+     *
      */
-    public function setNSegment($nSegment): void
+    private function initGsGenerator()
     {
-        $this->nSegment = $nSegment;
+        $this->setGsGenerator(new GsGenerator(
+            $this->getExtraInformation()['855_data']->application_receiver_code, // This will be used in the 'Application Sender's Code'.
+            $this->getExtraInformation()['855_data']->date,
+            $this->getExtraInformation()['855_data']->time,
+            $this->getExtraInformation()['855_data']->gs_group_control_number
+        ));
+    }
+
+    /**
+     *
+     */
+    private function initStGenerator()
+    {
+        $this->setStGenerator(new StGenerator(
+            $this->getExtraInformation()['855_data']->transaction_control_number
+        ));
+    }
+
+    /**
+     *
+     */
+    private function initBakGenerator()
+    {
+        $this->setBakGenerator(
+            new BakGenerator(
+                $this->getExtraInformation()['acknowledgment_type'],
+                $this->getExtraInformation()['855_data']->purchase_order_number,
+                $this->getExtraInformation()['855_data']->date)
+        );
+    }
+
+    /**
+     *
+     */
+    private function initN1Generator()
+    {
+        $this->setN1Generator(new N1Generator(
+            $this->getExtraInformation()['855_data']->name,
+            $this->getExtraInformation()['855_data']->identification_code
+        ));
+    }
+
+    /**
+     *
+     */
+    private function initCttGenerator()
+    {
+        $ctt02 = 0;
+
+        foreach ($this->getProductsData() as $product) {
+            $ctt02 += $product->getQuantityOrdered();
+        }
+
+        $this->setCttGenerator(new CttGenerator($this->getNumberOfLineItems(), $ctt02));
+    }
+
+    /**
+     *
+     */
+    private function initSeGenerator()
+    {
+        $this->setSeGenerator(new SeGenerator(
+            $this->getNumberOfSegments(),
+            $this->getExtraInformation()['855_data']->transaction_control_number
+        ));
+    }
+
+    /**
+     *
+     */
+    private function initGeGenerator()
+    {
+        $this->setGeGenerator(new GeGenerator(
+            $this->getExtraInformation()['855_data']->number_of_transactions,
+            $this->getExtraInformation()['855_data']->ge_group_control_number
+        ));
+    }
+
+    /**
+     *
+     */
+    private function initIeaGenerator()
+    {
+        $this->setIeaGenerator(new IeaGenerator(
+            $this->getExtraInformation()['855_data']->number_of_functional_groups,
+            $this->getExtraInformation()['855_data']->iea_interchange_control_number
+        ));
     }
 
     /**
      * @return int
      */
-    public function getNumberOfSegments(){
-        return count($this->getProductsData()) + 2;
+    public function getNumberOfSegments()
+    {
+        return count($this->getProductsData()) * 2 + 9;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberOfLineItems()
+    {
+        return count($this->getProductsData());
     }
 
     /**
      * @return mixed
      */
-    public function getIsaSegment()
+    public function getAckGenerator()
     {
-        return $this->isaSegment;
+        return $this->ackGenerator;
     }
 
     /**
-     * @param mixed $isaSegment
+     * @param mixed $ackGenerator
      */
-    public function setIsaSegment($isaSegment): void
+    public function setAckGenerator($ackGenerator): void
     {
-        $this->isaSegment = $isaSegment;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGsSegment()
-    {
-        return $this->gsSegment;
-    }
-
-    /**
-     * @param mixed $gsSegment
-     */
-    public function setGsSegment($gsSegment): void
-    {
-        $this->gsSegment = $gsSegment;
+        $this->ackGenerator[] = $ackGenerator;
     }
 
     /**
      * @return mixed
      */
-    public function getStSegment()
+    public function getBakGenerator()
     {
-        return $this->stSegment;
+        return $this->bakGenerator;
     }
 
     /**
-     * @param mixed $stSegment
+     * @param mixed $bakGenerator
      */
-    public function setStSegment($stSegment): void
+    public function setBakGenerator($bakGenerator): void
     {
-        $this->stSegment = $stSegment;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBakSegment()
-    {
-        return $this->bakSegment;
-    }
-
-    /**
-     * @param mixed $bakSegment
-     */
-    public function setBakSegment($bakSegment): void
-    {
-        $this->bakSegment = $bakSegment;
+        $this->bakGenerator = $bakGenerator;
     }
 
     /**
      * @return mixed
      */
-    public function getPo1Segment()
+    public function getCttGenerator()
     {
-        return $this->po1Segment;
+        return $this->cttGenerator;
     }
 
     /**
-     * @param mixed $po1Segment
+     * @param mixed $cttGenerator
      */
-    public function setPo1Segment($po1Segment): void
+    public function setCttGenerator($cttGenerator): void
     {
-        $this->po1Segment = $po1Segment;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSeSegment()
-    {
-        return $this->seSegment;
-    }
-
-    /**
-     * @param mixed $seSegment
-     */
-    public function setSeSegment($seSegment): void
-    {
-        $this->seSegment = $seSegment;
+        $this->cttGenerator = $cttGenerator;
     }
 
     /**
      * @return mixed
      */
-    public function getIsaData()
+    public function getGeGenerator()
     {
-        return $this->isaData;
+        return $this->geGenerator;
     }
 
     /**
-     * @param mixed $isaData
+     * @param mixed $geGenerator
      */
-    public function setIsaData($isaData): void
+    public function setGeGenerator($geGenerator): void
     {
-        $this->isaData = $isaData;
+        $this->geGenerator = $geGenerator;
     }
 
     /**
      * @return mixed
      */
-    public function getAckSegment()
+    public function getGsGenerator()
     {
-        return $this->ackSegment;
+        return $this->gsGenerator;
     }
 
     /**
-     * @param mixed $ackSegment
+     * @param mixed $gsGenerator
      */
-    public function setAckSegment($ackSegment): void
+    public function setGsGenerator($gsGenerator): void
     {
-        $this->ackSegment = $ackSegment;
+        $this->gsGenerator = $gsGenerator;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIeaGenerator()
+    {
+        return $this->ieaGenerator;
+    }
+
+    /**
+     * @param mixed $ieaGenerator
+     */
+    public function setIeaGenerator($ieaGenerator): void
+    {
+        $this->ieaGenerator = $ieaGenerator;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsaGenerator()
+    {
+        return $this->isaGenerator;
+    }
+
+    /**
+     * @param mixed $isaGenerator
+     */
+    public function setIsaGenerator($isaGenerator): void
+    {
+        $this->isaGenerator = $isaGenerator;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getN1Generator()
+    {
+        return $this->n1Generator;
+    }
+
+    /**
+     * @param mixed $n1Generator
+     */
+    public function setN1Generator($n1Generator): void
+    {
+        $this->n1Generator = $n1Generator;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPo1Generator()
+    {
+        return $this->po1Generator;
+    }
+
+    /**
+     * @param mixed $po1Generator
+     */
+    public function setPo1Generator($po1Generator): void
+    {
+        $this->po1Generator[] = $po1Generator;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSeGenerator()
+    {
+        return $this->seGenerator;
+    }
+
+    /**
+     * @param mixed $seGenerator
+     */
+    public function setSeGenerator($seGenerator): void
+    {
+        $this->seGenerator = $seGenerator;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStGenerator()
+    {
+        return $this->stGenerator;
+    }
+
+    /**
+     * @param mixed $stGenerator
+     */
+    public function setStGenerator($stGenerator): void
+    {
+        $this->stGenerator = $stGenerator;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSettings()
+    {
+        return $this->settings;
+    }
+
+    /**
+     * @param mixed $settings
+     */
+    public function setSettings($settings): void
+    {
+        $this->settings = $settings;
     }
 
     /**
@@ -338,4 +499,22 @@ class Generator
     {
         $this->productsData = $productsData;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getExtraInformation()
+    {
+        return $this->extraInformation;
+    }
+
+    /**
+     * @param mixed $extraInformation
+     */
+    public function setExtraInformation($extraInformation): void
+    {
+        $this->extraInformation = $extraInformation;
+    }
+
+
 }

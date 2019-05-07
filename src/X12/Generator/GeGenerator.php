@@ -4,8 +4,9 @@ namespace Aonach\X12\Generator;
 
 use Aonach\X12\Generator\SegmentGeneratorInterface;
 
+
 /**
- * Class CttGenerator
+ * Class GeGenerator
  * @package Aonach\X12\Generator
  */
 class GeGenerator implements SegmentGeneratorInterface
@@ -15,7 +16,6 @@ class GeGenerator implements SegmentGeneratorInterface
      *
      */
     const SEGMENT_CODE = 'GE';
-
 
     /**
      * @var
@@ -28,12 +28,22 @@ class GeGenerator implements SegmentGeneratorInterface
     private $groupControlNumber;
 
 
+    public function __construct($numberOfTransactionSetsIncluded, $groupControlNumber)
+    {
+        $this->setNumberOfTransactionSetsIncluded($numberOfTransactionSetsIncluded);
+        $this->setGroupControlNumber($groupControlNumber);
+    }
+
     /**
      * @return mixed|void
      */
     public function build()
     {
-        // TODO: Implement build() method.
+        $this->setData([
+            self::SEGMENT_CODE,
+            (!is_null($this->getNumberOfTransactionSetsIncluded())) ? $this->getNumberOfTransactionSetsIncluded() : '',
+            (!is_null($this->getGroupControlNumber())) ? $this->getGroupControlNumber() : ''
+        ]);
     }
 
     /**
@@ -41,7 +51,7 @@ class GeGenerator implements SegmentGeneratorInterface
      */
     public function __toString()
     {
-        return 'string';
+        return (!is_null($this->getDAta())) ? implode('*', $this->getData()) : self::SEGMENT_CODE;
     }
 
     /**

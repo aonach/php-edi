@@ -5,7 +5,7 @@ namespace Aonach\X12\Generator;
 use Aonach\X12\Generator\SegmentGeneratorInterface;
 
 /**
- * Class CttGenerator
+ * Class IeaGenerator
  * @package Aonach\X12\Generator
  */
 class IeaGenerator implements SegmentGeneratorInterface
@@ -25,12 +25,23 @@ class IeaGenerator implements SegmentGeneratorInterface
      */
     private $interchangeControlNumber;
 
+    public function __construct($numberOfIncludedFunctionalGroups, $interchangeControlNumber)
+    {
+        $this->setNumberOfIncludedFunctionalGroups($numberOfIncludedFunctionalGroups);
+        $this->setInterchangeControlNumber($interchangeControlNumber);
+    }
+
     /**
      * @return mixed|void
      */
     public function build()
     {
-        // TODO: Implement build() method.
+        $this->setData([
+            self::SEGMENT_CODE,
+            (!is_null($this->getNumberOfIncludedFunctionalGroups())) ? $this->getNumberOfIncludedFunctionalGroups() : '',
+            (!is_null($this->getInterchangeControlNumber())) ? $this->getInterchangeControlNumber() : '',
+        ]);
+
     }
 
     /**
@@ -38,7 +49,7 @@ class IeaGenerator implements SegmentGeneratorInterface
      */
     public function __toString()
     {
-        return 'string';
+        return (!is_null($this->getData())) ? implode('*', $this->getData()) : self::SEGMENT_CODE;
     }
 
     /**

@@ -27,7 +27,7 @@ class StGenerator implements SegmentGeneratorInterface
      *
      * @var $transactionSetIdentifierCode null
      */
-    private $transactionSetIdentifierCode = null;
+    private $transactionSetIdentifierCode = '855';
 
     /**
      * Identifying control number that must be unique within the transaction set
@@ -51,9 +51,8 @@ class StGenerator implements SegmentGeneratorInterface
     /**
      * TransactionSetHeader constructor.
      */
-    public function __construct($transactionSetIdentifierCode = '855', $transactionSetControlNumber = null)
+    public function __construct($transactionSetControlNumber)
     {
-        $this->setTransactionSetIdentifierCode($transactionSetIdentifierCode);
         $this->setTransactionSetControlNumber($transactionSetControlNumber);
     }
 

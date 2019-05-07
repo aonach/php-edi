@@ -3,7 +3,7 @@
 namespace Aonach\X12\Generator;
 
 /**
- * Class InterchangeHeader
+ * Class IsaGenerator
  *
  * Example : ST*855*852281220
  *
@@ -78,7 +78,7 @@ class IsaGenerator implements SegmentGeneratorInterface
      *
      * @var $interchangeReceiverId null
      */
-    private $interchangeReceiverId = null;
+    private $interchangeReceiverId = 'AMAZONDS';
 
     /**
      * Date of the interchange
@@ -98,14 +98,14 @@ class IsaGenerator implements SegmentGeneratorInterface
     /**
      * @var $interchangeControlStandardsIdentifier null
      */
-    private $interchangeControlStandardsIdentifier = null;
+    private $interchangeControlStandardsIdentifier = 'U';
 
     /**
      * Code specifying the version number of the interchange control segments
      *
      * @var $interchangeControlVersionNumber null
      */
-    private $interchangeControlVersionNumber = null;
+    private $interchangeControlVersionNumber = '00401';
 
     /**
      *  A control number assigned by the interchange sender
@@ -121,7 +121,7 @@ class IsaGenerator implements SegmentGeneratorInterface
      *
      * @var $acknowledgmentRequested null
      */
-    private $acknowledgmentRequested = null;
+    private $acknowledgmentRequested = '1';
 
     /**
      * Code to indicate whether data enclosed by this interchange envelope is test, production or information
@@ -171,14 +171,19 @@ class IsaGenerator implements SegmentGeneratorInterface
     /**
      * InterchangeHeader constructor.
      */
-    public function __construct($authorizationInformationQualifier = null, $authorizationInformation = null, $securityInformationQualifier = null, $securityInformation = null, $interchangeSenderId = '', $interchangeReceiverId = '')
+    public function __construct($authorizationInformationQualifier = null,
+                                $authorizationInformation = null,
+                                $securityInformationQualifier = null,
+                                $securityInformation = null,
+                                $interchangeSenderId = null,
+                                $usageIndicator = null)
     {
         $this->setAuthorizationInformationQualifier($authorizationInformationQualifier);
-        $this->setSecurityInformationQualifier($securityInformationQualifier);
         $this->setAuthorizationInformation($authorizationInformation);
+        $this->setSecurityInformationQualifier($securityInformationQualifier);
         $this->setSecurityInformation($securityInformation);
         $this->setInterchangeSenderId($interchangeSenderId);
-        $this->setInterchangeReceiverId($interchangeReceiverId);
+        $this->setUsageIndicator($usageIndicator);
     }
 
 
