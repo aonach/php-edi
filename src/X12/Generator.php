@@ -3,13 +3,13 @@
 namespace Aonach\X12;
 
 use Aonach\X12\Generator\BaselineItemData;
-use Aonach\X12\Generator\FunctionalGroupHeader;
-use Aonach\X12\Generator\InterchangeHeader;
-use Aonach\X12\Generator\PurchaseOrderAcknowledgment;
-use Aonach\X12\Generator\LineItemAcknowledgement;
-use Aonach\X12\Generator\TransactionSetHeader;
+use Aonach\X12\Generator\GsGenerator;
+use Aonach\X12\Generator\IsaGenerator;
+use Aonach\X12\Generator\BakGenerator;
+use Aonach\X12\Generator\AckGenerator;
+use Aonach\X12\Generator\StGenerator;
 use Aonach\X12\Generator\SegmentGeneratorInterface;
-use Aonach\X12\Generator\TransactionTrailer;
+use Aonach\X12\Generator\SeGenerator;
 use Aonach\X12\Generator\Name;
 use Aonach\X12\Generator\Product;
 use Faker\Provider\Base;
@@ -22,7 +22,7 @@ class Generator
 {
 
     /**
-     * @var InterchangeHeader $isaSegment
+     * @var IsaGenerator $isaSegment
      */
     private $isaSegment;
 
@@ -109,25 +109,25 @@ class Generator
      */
     public function generate()
     {
-        $this->isaSegment = new InterchangeHeader(
-            $this->isaData['amazon/authozization_qualifier'],
+        $this->isaSegment = new IsaGenerator(
+            $this->isaData['amazon/authorization_qualifier'],
             $this->isaData['amazon/authorization_information'],
             $this->isaData['amazon/security_qualifier'],
             $this->isaData['amazon/security_information']
         );
 
-        $this->gsSegment = new FunctionalGroupHeader();
-        $this->stSegment = new TransactionSetHeader('855', $this->getExtraInformation()['855_data']->transaction_control_number);
-        $this->bakSegment =  new PurchaseOrderAcknowledgment($this->getExtraInformation()['acknowledgment_type'], $this->getExtraInformation()['855_data']->purchase_order_number, $this->getExtraInformation()['855_data']->date_of_issuance);
+        $this->gsSegment = new GsGenerator();
+        $this->stSegment = new StGenerator('855', $this->getExtraInformation()['855_data']->transaction_control_number);
+        $this->bakSegment =  new BakGenerator($this->getExtraInformation()['acknowledgment_type'], $this->getExtraInformation()['855_data']->purchase_order_number, $this->getExtraInformation()['855_data']->date_of_issuance);
 //        $this->nSegment = new Name($this->getExtraInformation()['855_data']->entity_identifier_code, $this->getExtraInformation()['855_data']->name, $this->getExtraInformation()['855_data']->identification_code_qualifier, $this->getExtraInformation()['855_data']->identification_code);
         $this->nSegment = new Name('SF', $this->getExtraInformation()['855_data']->name, '92', $this->getExtraInformation()['855_data']->identification_code);
 
         foreach ($this->productsData as $product) {
             $this->po1Segment[] = new BaselineItemData($product);
-            $this->ackSegment[] = new LineItemAcknowledgement($product);
+            $this->ackSegment[] = new AckGenerator($product);
         }
 
-        $this->seSegment = new TransactionTrailer($this->getNumberOfSegments());
+        $this->seSegment = new SeGenerator($this->getNumberOfSegments());
 
         return $this->__generate();
 
