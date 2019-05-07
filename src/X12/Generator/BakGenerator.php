@@ -80,11 +80,26 @@ class BakGenerator implements SegmentGeneratorInterface
     private $releaseNumber;
 
     /**
+     * Reference number or RFQ number to use to identify a particular
+     * transaction set and query (additional reference number or description which can be used with contract number)
+     *
+     * @var
+     */
+    private $requestReferenceNumber = null;
+
+    /**
      * Contract number
      *
      * @var null $contractNumber
      */
     private $contractNumber = null;
+
+    /**
+     * Reference information as defined for a particular Transaction Set
+     * or as specified by the Reference Identification Qualifier
+     * @var null
+     */
+    private $referenceIdentification = null;
 
     /**
      * @var null
@@ -106,6 +121,10 @@ class BakGenerator implements SegmentGeneratorInterface
      */
     public function build()
     {
+        if($this->getAcknowledgmentType() == 'AT'){
+            $this->setReferenceIdentification($this->getPurchaseOrderNumber());
+        }
+
         $this->setData([
             self::SEGMENT_CODE,
             (!is_null($this->getTransactionSetPurposeCode())) ? $this->getTransactionSetPurposeCode() : '',
@@ -113,7 +132,9 @@ class BakGenerator implements SegmentGeneratorInterface
             (!is_null($this->getPurchaseOrderNumber())) ? $this->getPurchaseOrderNumber() : '',
             (!is_null($this->getDate())) ? $this->getDate() : '',
             (!is_null($this->getReleaseNumber())) ? $this->getReleaseNumber() : '',
-            (!is_null($this->getContractNumber())) ? $this->getContractNumber() : ''
+            (!is_null($this->getRequestReferenceNumber())) ? $this->getRequestReferenceNumber() : '',
+            (!is_null($this->getContractNumber())) ? $this->getContractNumber() : '',
+            (!is_null($this->getReferenceIdentification())) ? $this->getReferenceIdentification() : ''
         ]);
     }
 
@@ -222,12 +243,46 @@ class BakGenerator implements SegmentGeneratorInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getRequestReferenceNumber()
+    {
+        return $this->requestReferenceNumber;
+    }
+
+    /**
+     * @param mixed $requestReferenceNumber
+     */
+    public function setRequestReferenceNumber($requestReferenceNumber): void
+    {
+        $this->requestReferenceNumber = $requestReferenceNumber;
+    }
+
+    /**
+     * @return null
+     */
+    public function getReferenceIdentification()
+    {
+        return $this->referenceIdentification;
+    }
+
+    /**
+     * @param null $referenceIdentification
+     */
+    public function setReferenceIdentification($referenceIdentification): void
+    {
+        $this->referenceIdentification = $referenceIdentification;
+    }
+
+    /**
      * @return null
      */
     public function getData()
     {
         return $this->data;
     }
+
+
 
     /**
      * @param null $data

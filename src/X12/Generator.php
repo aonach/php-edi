@@ -110,12 +110,13 @@ class Generator
 
         foreach ($this->productsData as $product) {
             $this->setPo1Generator(new Po1Generator($product));
-            $this->setAckGenerator(new AckGenerator($product));
+            $this->initAckGenerator($product);
         }
 
         $this->initCttGenerator();
         $this->initSeGenerator();
         $this->initGeGenerator();
+        $this->initIeaGenerator();
 
 
         return $this->__generate();
@@ -133,17 +134,18 @@ class Generator
         $this->getBakGenerator()->build();
         $this->getN1Generator()->build();
 
-        foreach ($this->getPo1Segment() as $po1) {
+        foreach ($this->getPo1Generator() as $po1) {
             $po1->build();
         }
 
-        foreach ($this->getAckSegment() as $ack) {
+        foreach ($this->getAckGenerator() as $ack) {
             $ack->build();
         }
 
         $this->getCttGenerator()->build();
         $this->getSeGenerator()->build();
         $this->getGeGenerator()->build();
+        $this->getIeaGenerator()->build();
 
         $fileContent = array();
 
@@ -153,13 +155,14 @@ class Generator
         $fileContent[] = $this->getBakGenerator()->__toString();
         $fileContent[] = $this->getN1Generator()->__toString();
 
-        for ($i = 0; $i < count($this->getPo1Segment()); $i++) {
+        for ($i = 0; $i < count($this->getPo1Generator()); $i++) {
             $fileContent[] = $this->getPo1Generator()[$i]->__toString();
             $fileContent[] = $this->getAckGenerator()[$i]->__toString();
         }
         $fileContent[] = $this->getCttGenerator()->__toString();
         $fileContent[] = $this->getSeGenerator()->__toString();
         $fileContent[] = $this->getGeGenerator()->__toString();
+        $fileContent[] = $this->getIeaGenerator()->__toString();
 
         return implode('~', $fileContent);
     }
@@ -178,8 +181,10 @@ class Generator
             $this->getSettings()['amazon/usage_indicator']
         ));
 
-        $this->getIsaGenerator()->setInterchangeData($this->getExtraInformation()['855_data']->interchange_date);
+        $this->getIsaGenerator()->setInterchangeDate($this->getExtraInformation()['855_data']->interchange_date);
         $this->getIsaGenerator()->setInterchangeTime($this->getExtraInformation()['855_data']->interchange_time);
+        $this->getIsaGenerator()->setInterchangeIdQualifier($this->getSettings()['amazon/interchange_id_qualifier']);
+        $this->getIsaGenerator()->setInterchangeControlNumber($this->getExtraInformation()['855_data']->isa_interchange_control_number);
     }
 
     /**
@@ -274,6 +279,26 @@ class Generator
             $this->getExtraInformation()['855_data']->number_of_functional_groups,
             $this->getExtraInformation()['855_data']->iea_interchange_control_number
         ));
+    }
+
+    private function initAckGenerator($product)
+    {
+        $ackObj = new AckGenerator($product);
+
+        foreach ($this->getExtraInformation()['855_data']->po1 as $item) {
+            if($item->buyer_product_id == $product->getProductId()){
+                if($item->quantity_ordered > $product->getQuantityOrdered()){
+                    $ackObj->setLineItemStatusCode('IR');
+                    $ackObj->setIndustryCode('03');
+                    $this->setAckGenerator($ackObj);
+                    return;
+                }
+                $ackObj->setLineItemStatusCode('IA');
+                $ackObj->setIndustryCode('00');
+                $this->setAckGenerator($ackObj);
+                return;
+            }
+        }
     }
 
     /**

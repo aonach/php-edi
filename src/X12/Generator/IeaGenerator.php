@@ -25,6 +25,16 @@ class IeaGenerator implements SegmentGeneratorInterface
      */
     private $interchangeControlNumber;
 
+    /**
+     * @var
+     */
+    private $data;
+
+    /**
+     * IeaGenerator constructor.
+     * @param $numberOfIncludedFunctionalGroups
+     * @param $interchangeControlNumber
+     */
     public function __construct($numberOfIncludedFunctionalGroups, $interchangeControlNumber)
     {
         $this->setNumberOfIncludedFunctionalGroups($numberOfIncludedFunctionalGroups);
@@ -83,4 +93,21 @@ class IeaGenerator implements SegmentGeneratorInterface
     {
         $this->interchangeControlNumber = $interchangeControlNumber;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function setData($data): void
+    {
+        $this->data = $data;
+    }
+
 }

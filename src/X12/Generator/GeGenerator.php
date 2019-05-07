@@ -27,7 +27,17 @@ class GeGenerator implements SegmentGeneratorInterface
      */
     private $groupControlNumber;
 
+    /**
+     * @var
+     */
+    private $data;
 
+
+    /**
+     * GeGenerator constructor.
+     * @param $numberOfTransactionSetsIncluded
+     * @param $groupControlNumber
+     */
     public function __construct($numberOfTransactionSetsIncluded, $groupControlNumber)
     {
         $this->setNumberOfTransactionSetsIncluded($numberOfTransactionSetsIncluded);
@@ -84,5 +94,21 @@ class GeGenerator implements SegmentGeneratorInterface
     public function setGroupControlNumber($groupControlNumber): void
     {
         $this->groupControlNumber = $groupControlNumber;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function setData($data): void
+    {
+        $this->data = $data;
     }
 }

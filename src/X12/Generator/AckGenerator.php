@@ -7,7 +7,7 @@ use Aonach\X12\Generator\Product;
 
 
 /**
- * Class LineItemAcknowledgement
+ * Class AckGenerator
  * @package Aonach\X12\Generator
  */
 class AckGenerator implements SegmentGeneratorInterface
@@ -40,7 +40,7 @@ class AckGenerator implements SegmentGeneratorInterface
      *
      * @var null $lineItemStatusCode
      */
-    private $lineItemStatusCode = 'IA';
+    private $lineItemStatusCode = null;
 
     /**
      * @var null
@@ -60,17 +60,34 @@ class AckGenerator implements SegmentGeneratorInterface
     private $dateQualifier = null;
 
     /**
-     * Date expressed as CCYYMMDD
-     *
-     * @var null $lineItemPromiseDate
+     * @var null
      */
-    private $lineItemPromiseDate = null;
+    private $date = null;
 
     /**
      *
      * @var null $requestReferenceNumber
      */
     private $requestReferenceNumber = null;
+
+
+    /**
+     * @var null
+     */
+    private $productIdQualifier = null;
+
+    /**
+     * @var null
+     */
+    private $productId = null;
+
+
+    /**
+     * @var null
+     */
+    private $industryCode = null;
+
+
 
     /**
      * @var
@@ -97,8 +114,31 @@ class AckGenerator implements SegmentGeneratorInterface
                 (!is_null($this->getQuantity())) ? $this->getQuantity() : '',
                 (!is_null($this->getBasisMeasurementCode())) ? $this->getBasisMeasurementCode() : '',
                 (!is_null($this->getDateQualifier())) ? $this->getDateQualifier() : '',
-                (!is_null($this->getLineItemPromiseDate())) ? $this->getLineItemPromiseDate() : '',
-                (!is_null($this->getRequestReferenceNumber())) ? $this->getRequestReferenceNumber() : ''
+                (!is_null($this->getDate())) ? $this->getDate() : '',
+                (!is_null($this->getRequestReferenceNumber())) ? $this->getRequestReferenceNumber() : '',
+                (!is_null($this->getProductIdQualifier())) ? $this->getProductIdQualifier() : '',
+                (!is_null($this->getProductId())) ? $this->getProductId() : '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                (!is_null($this->getIndustryCode())) ? $this->getIndustryCode() : ''
             ]
 
         );
@@ -177,21 +217,6 @@ class AckGenerator implements SegmentGeneratorInterface
         $this->dateQualifier = $dateQualifier;
     }
 
-    /**
-     * @return null
-     */
-    public function getLineItemPromiseDate()
-    {
-        return $this->lineItemPromiseDate;
-    }
-
-    /**
-     * @param null $lineItemPromiseDate
-     */
-    public function setLineItemPromiseDate($lineItemPromiseDate): void
-    {
-        $this->lineItemPromiseDate = $lineItemPromiseDate;
-    }
 
     /**
      * @return null
@@ -208,6 +233,71 @@ class AckGenerator implements SegmentGeneratorInterface
     {
         $this->requestReferenceNumber = $requestReferenceNumber;
     }
+
+    /**
+     * @return null
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param null $date
+     */
+    public function setDate($date): void
+    {
+        $this->date = $date;
+    }
+
+    /**
+     * @return null
+     */
+    public function getProductIdQualifier()
+    {
+        return $this->productIdQualifier;
+    }
+
+    /**
+     * @param null $productIdQualifier
+     */
+    public function setProductIdQualifier($productIdQualifier): void
+    {
+        $this->productIdQualifier = $productIdQualifier;
+    }
+
+    /**
+     * @return null
+     */
+    public function getProductId()
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @param null $productId
+     */
+    public function setProductId($productId): void
+    {
+        $this->productId = $productId;
+    }
+
+    /**
+     * @return null
+     */
+    public function getIndustryCode()
+    {
+        return $this->industryCode;
+    }
+
+    /**
+     * @param null $industryCode
+     */
+    public function setIndustryCode($industryCode): void
+    {
+        $this->industryCode = $industryCode;
+    }
+
 
     /**
      * @return mixed
