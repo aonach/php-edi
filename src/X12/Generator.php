@@ -24,19 +24,19 @@ use Faker\Provider\Base;
 class Generator
 {
     /**
-     * @var
+     * @var $ackGenerator AckGenerator
      */
     private $ackGenerator = array();
     /**
-     * @var
+     * @var $bakGenerator BakGenerator
      */
     private $bakGenerator;
     /**
-     * @var
+     * @var $cttGenerator CttGenerator
      */
     private $cttGenerator;
     /**
-     * @var
+     * @var $geGenerator GeGenerator
      */
     private $geGenerator;
     /**
@@ -47,8 +47,9 @@ class Generator
      * @var
      */
     private $ieaGenerator;
+
     /**
-     * @var
+     * @var $isaGenerator isaGenerator
      */
     private $isaGenerator;
     /**
@@ -106,7 +107,7 @@ class Generator
         $this->initGsGenerator();
         $this->initStGenerator();
         $this->initBakGenerator();
-        $this->initN1Generator();
+//        $this->initN1Generator();
 
         foreach ($this->productsData as $product) {
             $this->setPo1Generator(new Po1Generator($product));
@@ -132,7 +133,7 @@ class Generator
         $this->getGsGenerator()->build();
         $this->getStGenerator()->build();
         $this->getBakGenerator()->build();
-        $this->getN1Generator()->build();
+//        $this->getN1Generator()->build();
 
         foreach ($this->getPo1Generator() as $po1) {
             $po1->build();
@@ -153,7 +154,7 @@ class Generator
         $fileContent[] = $this->getGsGenerator()->__toString();
         $fileContent[] = $this->getStGenerator()->__toString();
         $fileContent[] = $this->getBakGenerator()->__toString();
-        $fileContent[] = $this->getN1Generator()->__toString();
+//        $fileContent[] = $this->getN1Generator()->__toString();
 
         for ($i = 0; $i < count($this->getPo1Generator()); $i++) {
             $fileContent[] = $this->getPo1Generator()[$i]->__toString();
@@ -172,7 +173,7 @@ class Generator
      */
     private function initIsaGenerator()
     {
-        $this->setIsaGenerator(new IsaGenerator(
+        $this->setIsaGenerator(new isaGenerator(
             $this->getSettings()['amazon/authorization_qualifier'],
             $this->getSettings()['amazon/authorization_information'],
             $this->getSettings()['amazon/security_qualifier'],
@@ -183,7 +184,8 @@ class Generator
 
         $this->getIsaGenerator()->setInterchangeDate($this->getExtraInformation()['855_data']->interchange_date);
         $this->getIsaGenerator()->setInterchangeTime($this->getExtraInformation()['855_data']->interchange_time);
-        $this->getIsaGenerator()->setInterchangeIdQualifier($this->getSettings()['amazon/interchange_id_qualifier']);
+        $this->getIsaGenerator()->setInterchangeIdQualifier01($this->getSettings()['amazon/interchange_id_qualifier']);
+        $this->getIsaGenerator()->setInterchangeIdQualifier02($this->getSettings()['amazon/interchange_id_qualifier']);
         $this->getIsaGenerator()->setInterchangeControlNumber($this->getExtraInformation()['855_data']->isa_interchange_control_number);
     }
 
@@ -229,8 +231,8 @@ class Generator
     private function initN1Generator()
     {
         $this->setN1Generator(new N1Generator(
-            $this->getExtraInformation()['855_data']->name,
-            $this->getExtraInformation()['855_data']->identification_code
+            'RNO1',
+            'RNO1'
         ));
     }
 
@@ -334,7 +336,7 @@ class Generator
     }
 
     /**
-     * @return mixed
+     * @return BakGenerator
      */
     public function getBakGenerator()
     {
@@ -342,7 +344,7 @@ class Generator
     }
 
     /**
-     * @param mixed $bakGenerator
+     * @param BakGenerator $bakGenerator
      */
     public function setBakGenerator($bakGenerator): void
     {
@@ -414,7 +416,7 @@ class Generator
     }
 
     /**
-     * @return mixed
+     * @return isaGenerator
      */
     public function getIsaGenerator()
     {

@@ -27,6 +27,8 @@ class Po1Generator implements SegmentGeneratorInterface
     const SEGMENT_SECTIONS_NUMBER = 7;
 
     /**
+     * PO101
+     *
      * Alphanumeric characters assigned for differentiation within a transaction set
      *
      * @var null $assignedIdentification
@@ -34,6 +36,7 @@ class Po1Generator implements SegmentGeneratorInterface
     private $assignedIdentification = null;
 
     /**
+     * PO102
      * Quantity ordered
      *
      * @var null $quantityOrdered
@@ -41,6 +44,8 @@ class Po1Generator implements SegmentGeneratorInterface
     private $quantityOrdered = null;
 
     /**
+     * PO103
+     *
      * Code specifying the units in which a value is being expressed,
      * or manner in which a measurement has been taken
      *      EA      Each
@@ -52,8 +57,9 @@ class Po1Generator implements SegmentGeneratorInterface
      */
     private $measurementCode = 'EA';
 
-
     /**
+     * PO104
+     *
      * Price per unit of product, service, commodity, etc
      *
      * @var null $unitPrice
@@ -61,6 +67,8 @@ class Po1Generator implements SegmentGeneratorInterface
     private $unitPrice = null;
 
     /**
+     * PO105
+     *
      * Code identifying the type of unit price for an item
      *
      *      CA      Catalog
@@ -76,7 +84,7 @@ class Po1Generator implements SegmentGeneratorInterface
      *
      * @var null $basisUnitPriceCode
      */
-    private $basisUnitPriceCode = null;
+    private $basisUnitPriceCode = 'PE';
 
 
     /**
@@ -95,7 +103,7 @@ class Po1Generator implements SegmentGeneratorInterface
      *
      * @var null $productIdQualifier
      */
-    private $productIdQualifier = 'SK';
+    private $productIdQualifier = 'VN';
 
 
     /**

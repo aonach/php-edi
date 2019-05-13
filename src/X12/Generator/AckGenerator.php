@@ -19,6 +19,11 @@ class AckGenerator implements SegmentGeneratorInterface
     const SEGMENT_CODE = 'ACK';
 
     /**
+     * ACK01
+     *
+     * If codes IS, AN, BC, BH, IF, IH, or IW are used, the messages contained in this file will reject in Amazon's systems.
+     * Please also see the Appendix EDI 855 document for further information.
+     *
      * Alphanumeric characters assigned for differentiation within a transaction set
      *      AC      Item accepted and shipped
      *      AR      Item accepted and released for shipment
@@ -43,23 +48,32 @@ class AckGenerator implements SegmentGeneratorInterface
     private $lineItemStatusCode = null;
 
     /**
+     * ACK02
+     *
      * @var null
      */
     private $quantity = null;
 
     /**
+     * ACK03
+     *
      * @var null
      */
     private $basisMeasurementCode = null;
 
     /**
+     * ACK04
+     *
      *      069     Promise date
      *      011     Shipped
+     *
      * @var $dateQualifier
      */
     private $dateQualifier = null;
 
     /**
+     * ACK05
+     *
      * @var null
      */
     private $date = null;
@@ -112,37 +126,11 @@ class AckGenerator implements SegmentGeneratorInterface
                 self::SEGMENT_CODE,
                 (!is_null($this->getLineItemStatusCode())) ? $this->getLineItemStatusCode() : '',
                 (!is_null($this->getQuantity())) ? $this->getQuantity() : '',
-                (!is_null($this->getBasisMeasurementCode())) ? $this->getBasisMeasurementCode() : '',
-                (!is_null($this->getDateQualifier())) ? $this->getDateQualifier() : '',
-                (!is_null($this->getDate())) ? $this->getDate() : '',
-                (!is_null($this->getRequestReferenceNumber())) ? $this->getRequestReferenceNumber() : '',
-                (!is_null($this->getProductIdQualifier())) ? $this->getProductIdQualifier() : '',
-                (!is_null($this->getProductId())) ? $this->getProductId() : '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                (!is_null($this->getIndustryCode())) ? $this->getIndustryCode() : ''
+                (!is_null($this->getBasisMeasurementCode())) ? $this->getBasisMeasurementCode() : ''
+//                (!is_null($this->getDateQualifier())) ? $this->getDateQualifier() : '',
+//                (!is_null($this->getDate())) ? $this->getDate() : ''
             ]
-
         );
-
     }
 
     /**

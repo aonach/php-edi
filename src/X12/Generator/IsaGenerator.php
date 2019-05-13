@@ -23,6 +23,8 @@ class IsaGenerator implements SegmentGeneratorInterface
     const SEGMENT_SECTIONS_NUMBER = 16;
 
     /**
+     *  ISA01
+     *
      *  Code to identify the type of information in the Authorization Information
      *       00        No Authorization Information Present (No Meaningful Information in I02)
      *       01        UCS Communications ID
@@ -32,21 +34,27 @@ class IsaGenerator implements SegmentGeneratorInterface
     private $authorizationInformationQualifier = null;
 
     /**
-     *  Information used for additional identification or authorization of the interchange sender
-     *  or the data in the interchange; the type of information is set by the Authorization Information Qualifier (I01)
+     * ISA02
+     *
+     * Information used for additional identification or authorization of the interchange sender
+     * or the data in the interchange; the type of information is set by the Authorization Information Qualifier (I01)
      *
      * @var $authorizationInformation null
      */
     private $authorizationInformation = null;
 
     /**
-     *  Code to identify the type of information in the Security Information
+     * ISA03
+     *
+     * Code to identify the type of information in the Security Information
      *
      * @var $securityInformationQualifier null
      */
     private $securityInformationQualifier = null;
 
     /**
+     * ISA04
+     *
      * This is used for identifying the security information about the interchange sender or the data
      * in the interchange; the type of information is set by the Security Information Qualifier (I03)
      *
@@ -55,14 +63,18 @@ class IsaGenerator implements SegmentGeneratorInterface
     private $securityInformation = null;
 
     /**
+     * ISA05
+     *
      * Qualifier to designate the system/method of code structure used
      * to designate the sender or receiver ID element being qualified
      *
-     * @var $interchangeIdQualifier null
+     * @var $interchangeIdQualifier01 null
      */
-    private $interchangeIdQualifier = null;
+    private $interchangeIdQualifier01 = null;
 
     /**
+     * ISA06
+     *
      * Identification code published by the sender for other parties to use as the receiver ID to route data to them;\
      * the sender always codes this value in the sender ID element
      *
@@ -71,16 +83,32 @@ class IsaGenerator implements SegmentGeneratorInterface
     private $interchangeSenderId = null;
 
     /**
+     * ISA07
+     *
+     * Qualifier to designate the system/method of code structure used
+     * to designate the sender or receiver ID element being qualified
+     *
+     * @var $interchangeIdQualifier02 null
+     */
+    private $interchangeIdQualifier02 = null;
+
+    /**
+     * ISA08
+     *
      * Identification code published by the receiver of the data;
      * When sending, it is used by the sender as their sending ID,
      * thus other parties sending to them will use this as a receiving
      * ID to route data to them
      *
-     * @var $interchangeReceiverId null
+     * This will be Amazon's EDI ID. AMAZON for Amazon US, AMAZONCA for Amazon Canada, AMAZONMX for Amazon Mexico and AMAZONBR for Amazon Brazil
+     *
+     * @var $interchangeReceiverId string
      */
-    private $interchangeReceiverId = 'AMAZONDS';
+    private $interchangeReceiverId = 'AMAZON';
 
     /**
+     * ISA09
+     *
      * Date of the interchange
      *
      * @var $interchangeDate null
@@ -89,6 +117,8 @@ class IsaGenerator implements SegmentGeneratorInterface
 
 
     /**
+     * ISA10
+     *
      * Time of the interchange
      *
      * @var $interchangeTime null
@@ -96,34 +126,47 @@ class IsaGenerator implements SegmentGeneratorInterface
     private $interchangeTime = null;
 
     /**
-     * @var $interchangeControlStandardsIdentifier null
+     * ISA11
+     *
+     * Repetition Separator
+     *
+     * @var $repetitionSeparator string
      */
-    private $interchangeControlStandardsIdentifier = 'U';
+    private $repetitionSeparator = 'U';
 
     /**
+     * ISA12
+     *
      * Code specifying the version number of the interchange control segments
      *
-     * @var $interchangeControlVersionNumber null
+     * @var $interchangeControlVersionNumber string
      */
     private $interchangeControlVersionNumber = '00401';
 
     /**
-     *  A control number assigned by the interchange sender
+     * ISA13
+     *
+     * A control number assigned by the interchange sender
      *
      * @var $interchangeControlNumber null
      */
     private $interchangeControlNumber = null;
 
     /**
+     * ISA14
+     *
      * Code sent by the sender to request an interchange acknowledgment (TA1)
      *
-     *      0       No Acknowledgment Requested
+     *      0 No Acknowledgment Requested
+     *      1 Interchange Acknowledgment Requested
      *
-     * @var $acknowledgmentRequested null
+     * @var $acknowledgmentRequested string
      */
-    private $acknowledgmentRequested = '1';
+    private $acknowledgmentRequested = '0';
 
     /**
+     * ISA15
+     *
      * Code to indicate whether data enclosed by this interchange envelope is test, production or information
      *
      *      P       Production Data
@@ -134,23 +177,8 @@ class IsaGenerator implements SegmentGeneratorInterface
     private $usageIndicator = null;
 
     /**
-     * @return null
-     */
-    public function getComponentElementSeparator()
-    {
-        return $this->componentElementSeparator;
-    }
-
-    /**
-     * @param null $componentElementSeparator
-     */
-    public function setComponentElementSeparator($componentElementSeparator): void
-    {
-        $this->componentElementSeparator = $componentElementSeparator;
-    }
-
-
-    /**
+     * ISA16
+     *
      * Type is not applicable; the component element separator is a delimiter and not a data element; this field provides the delimiter used to
      * separate component data elements within a composite data structure; this value must be different than the data element separator and the
      * segment terminator
@@ -200,13 +228,13 @@ class IsaGenerator implements SegmentGeneratorInterface
             (!is_null($this->getAuthorizationInformation())) ? $this->getAuthorizationInformation() : '',
             (!is_null($this->getSecurityInformationQualifier())) ? $this->getSecurityInformationQualifier() : '',
             (!is_null($this->getSecurityInformation())) ? $this->getSecurityInformation() : '',
-            (!is_null($this->getInterchangeIdQualifier())) ? $this->getInterchangeIdQualifier() : '',
+            (!is_null($this->getInterchangeIdQualifier01())) ? $this->getInterchangeIdQualifier01() : '',
             (!is_null($this->getInterchangeSenderId())) ? $this->getInterchangeSenderId() : '',
-            (!is_null($this->getInterchangeIdQualifier())) ? $this->getInterchangeIdQualifier() : '',
+            (!is_null($this->getInterchangeIdQualifier02())) ? $this->getInterchangeIdQualifier02() : '',
             (!is_null($this->getInterchangeReceiverId())) ? $this->getInterchangeReceiverId() : '',
             (!is_null($this->getInterchangeDate())) ? $this->getInterchangeDate() : '',
             (!is_null($this->getInterchangeTime())) ? $this->getInterchangeTime() : '',
-            (!is_null($this->getInterchangeControlStandardsIdentifier())) ? $this->getInterchangeControlStandardsIdentifier() : '',
+            (!is_null($this->getRepetitionSeparator())) ? $this->getRepetitionSeparator() : '',
             (!is_null($this->getInterchangeControlVersionNumber())) ? $this->getInterchangeControlVersionNumber() : '',
             (!is_null($this->getInterchangeControlNumber())) ? $this->getInterchangeControlNumber() : '',
             (!is_null($this->getAcknowledgmentRequested())) ? $this->getAcknowledgmentRequested() : '',
@@ -294,17 +322,17 @@ class IsaGenerator implements SegmentGeneratorInterface
     /**
      * @return null
      */
-    public function getInterchangeIdQualifier()
+    public function getInterchangeIdQualifier01()
     {
-        return $this->interchangeIdQualifier;
+        return $this->interchangeIdQualifier01;
     }
 
     /**
-     * @param null $interchangeIdQualifier
+     * @param null $interchangeIdQualifier01
      */
-    public function setInterchangeIdQualifier($interchangeIdQualifier): void
+    public function setInterchangeIdQualifier01($interchangeIdQualifier01): void
     {
-        $this->interchangeIdQualifier = $interchangeIdQualifier;
+        $this->interchangeIdQualifier01 = $interchangeIdQualifier01;
     }
 
     /**
@@ -326,15 +354,31 @@ class IsaGenerator implements SegmentGeneratorInterface
     /**
      * @return null
      */
-    public function getInterchangeReceiverId()
+    public function getInterchangeIdQualifier02()
+    {
+        return $this->interchangeIdQualifier02;
+    }
+
+    /**
+     * @param null $interchangeIdQualifier02
+     */
+    public function setInterchangeIdQualifier02($interchangeIdQualifier02): void
+    {
+        $this->interchangeIdQualifier02 = $interchangeIdQualifier02;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInterchangeReceiverId(): string
     {
         return $this->interchangeReceiverId;
     }
 
     /**
-     * @param null $interchangeReceiverId
+     * @param string $interchangeReceiverId
      */
-    public function setInterchangeReceiverId($interchangeReceiverId): void
+    public function setInterchangeReceiverId(string $interchangeReceiverId): void
     {
         $this->interchangeReceiverId = $interchangeReceiverId;
     }
@@ -372,33 +416,33 @@ class IsaGenerator implements SegmentGeneratorInterface
     }
 
     /**
-     * @return null
+     * @return string
      */
-    public function getInterchangeControlStandardsIdentifier()
+    public function getRepetitionSeparator(): string
     {
-        return $this->interchangeControlStandardsIdentifier;
+        return $this->repetitionSeparator;
     }
 
     /**
-     * @param null $interchangeControlStandardsIdentifier
+     * @param string $repetitionSeparator
      */
-    public function setInterchangeControlStandardsIdentifier($interchangeControlStandardsIdentifier): void
+    public function setRepetitionSeparator(string $repetitionSeparator): void
     {
-        $this->interchangeControlStandardsIdentifier = $interchangeControlStandardsIdentifier;
+        $this->repetitionSeparator = $repetitionSeparator;
     }
 
     /**
-     * @return null
+     * @return string
      */
-    public function getInterchangeControlVersionNumber()
+    public function getInterchangeControlVersionNumber(): string
     {
         return $this->interchangeControlVersionNumber;
     }
 
     /**
-     * @param null $interchangeControlVersionNumber
+     * @param string $interchangeControlVersionNumber
      */
-    public function setInterchangeControlVersionNumber($interchangeControlVersionNumber): void
+    public function setInterchangeControlVersionNumber(string $interchangeControlVersionNumber): void
     {
         $this->interchangeControlVersionNumber = $interchangeControlVersionNumber;
     }
@@ -420,17 +464,17 @@ class IsaGenerator implements SegmentGeneratorInterface
     }
 
     /**
-     * @return null
+     * @return string
      */
-    public function getAcknowledgmentRequested()
+    public function getAcknowledgmentRequested(): string
     {
         return $this->acknowledgmentRequested;
     }
 
     /**
-     * @param null $acknowledgmentRequested
+     * @param string $acknowledgmentRequested
      */
-    public function setAcknowledgmentRequested($acknowledgmentRequested): void
+    public function setAcknowledgmentRequested(string $acknowledgmentRequested): void
     {
         $this->acknowledgmentRequested = $acknowledgmentRequested;
     }
@@ -449,6 +493,22 @@ class IsaGenerator implements SegmentGeneratorInterface
     public function setUsageIndicator($usageIndicator): void
     {
         $this->usageIndicator = $usageIndicator;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComponentElementSeparator(): string
+    {
+        return $this->componentElementSeparator;
+    }
+
+    /**
+     * @param string $componentElementSeparator
+     */
+    public function setComponentElementSeparator(string $componentElementSeparator): void
+    {
+        $this->componentElementSeparator = $componentElementSeparator;
     }
 
     /**

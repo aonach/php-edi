@@ -31,7 +31,7 @@ class N1Generator implements SegmentGeneratorInterface
     /**
      * @var
      */
-    private $name;
+    private $name = 'RNO1';
 
     /**
      * @var
@@ -41,7 +41,7 @@ class N1Generator implements SegmentGeneratorInterface
     /**
      * @var
      */
-    private $identificationCode;
+    private $identificationCode = 'RNO1';
 
     /**
      * @var

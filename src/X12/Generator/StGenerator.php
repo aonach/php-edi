@@ -21,11 +21,13 @@ class StGenerator implements SegmentGeneratorInterface
     const SEGMENT_SECTIONS_NUMBER = 2;
 
     /**
+     * ST01
+     *
      *  Code uniquely identifying a Transaction Set
      *
      *      855         Purchase Order Acknowledgment
      *
-     * @var $transactionSetIdentifierCode null
+     * @var $transactionSetIdentifierCode string
      */
     private $transactionSetIdentifierCode = '855';
 

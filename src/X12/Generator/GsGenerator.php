@@ -21,6 +21,8 @@ class GsGenerator implements SegmentGeneratorInterface
     const SEGMENT_SECTIONS_NUMBER = 8;
 
     /**
+     * GS01
+     *
      * Code identifying a group of application related transaction sets
      *
      *      PR      Purchase Order Acknowledgement (855)
@@ -30,6 +32,8 @@ class GsGenerator implements SegmentGeneratorInterface
     private $functionalIdentifierCode = 'PR';
 
     /**
+     * GS02
+     *
      * Code identifying party sending transmission; codes agreed to by trading partners
      *
      * @var $applicationSenderCode
@@ -37,13 +41,17 @@ class GsGenerator implements SegmentGeneratorInterface
     private $applicationSenderCode = null;
 
     /**
+     * GS03
+     *
      * Code identifying party receiving transmission; codes agreed to by trading partners
      *
      * @var $applicationReceiverCode
      */
-    private $applicationReceiverCode = 'AMAZONDS';
+    private $applicationReceiverCode = 'AMAZON';
 
     /**
+     * GS04
+     *
      * Date expressed as CCYYMMDD
      *
      * @var $date
@@ -51,6 +59,8 @@ class GsGenerator implements SegmentGeneratorInterface
     private $date = null;
 
     /**
+     * GS05
+     *
      * Time expressed in 24-hour clock time as follows: HHMM, or HHMMSS, or HHMMSSD, or
      * HHMMSSDD, where H = hours (00-23), M = minutes (00-59), S = integer seconds (00-59) and
      * DD = decimal seconds; decimal seconds are expressed as follows: D = tenths (0-9) and DD =
@@ -61,22 +71,29 @@ class GsGenerator implements SegmentGeneratorInterface
     private $time = null;
 
     /**
+     * GS06
+     *
      *  Assigned number originated and maintained by the sender
+     *
      * @var $groupControlNumber
      */
     private $groupControlNumber = null;
 
     /**
+     * GS07
+     *
      * Code identifying the issuer of the standard; this code is used in conjunction with Data
      * Element 480
      *
      *      X       Accredited Standards Committee X12
      *
-     * @var $responsibleAgencyCode
+     * @var $responsibleAgencyCode string
      */
     private $responsibleAgencyCode = 'X';
 
     /**
+     * GS08
+     *
      * Code indicating the version, release, subrelease, and industry identifier of the EDI
      * standard being used, including the GS and GE segments; if code in DE455 in GS segment is X,
      * then in DE 480 positions 1-3 are the version number; positions 4-6 are the release and

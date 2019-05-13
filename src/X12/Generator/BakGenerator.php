@@ -30,6 +30,8 @@ class BakGenerator implements SegmentGeneratorInterface
     const SEGMENT_SECTIONS_NUMBER = 6;
 
     /**
+     * BAK01
+     *
      * Code identifying purpose of transaction set
      *      00      Original
      *
@@ -38,6 +40,8 @@ class BakGenerator implements SegmentGeneratorInterface
     private $transactionSetPurposeCode = '00';
 
     /**
+     * BAK02
+     *
      * Code specifying the type of acknowledgment
      *      AC      Acknowledge - With Detail and Change
      *      AD      Acknowledge - With Detail, No Change
@@ -52,6 +56,8 @@ class BakGenerator implements SegmentGeneratorInterface
     private $acknowledgmentType = null;
 
     /**
+     * BAK03
+     *
      * Identifying number for Purchase Order assigned by the orderer/purchaser
      *
      * Buyer's original purchase order number used to identify an order.
@@ -63,6 +69,8 @@ class BakGenerator implements SegmentGeneratorInterface
 
 
     /**
+     * BAK04
+     *
      * Date expressed as CCYYMMDD
      *
      * Buyer's purchase order date as received on the BEG segment in the 850 transaction.
@@ -71,35 +79,6 @@ class BakGenerator implements SegmentGeneratorInterface
      */
     private $date = null;
 
-    /**
-     * Number identifying a release against a Purchase Order previously placed
-     * by the parties involved in the transaction
-     *
-     * @var null $releaseNumber
-     */
-    private $releaseNumber;
-
-    /**
-     * Reference number or RFQ number to use to identify a particular
-     * transaction set and query (additional reference number or description which can be used with contract number)
-     *
-     * @var
-     */
-    private $requestReferenceNumber = null;
-
-    /**
-     * Contract number
-     *
-     * @var null $contractNumber
-     */
-    private $contractNumber = null;
-
-    /**
-     * Reference information as defined for a particular Transaction Set
-     * or as specified by the Reference Identification Qualifier
-     * @var null
-     */
-    private $referenceIdentification = null;
 
     /**
      * @var null
@@ -130,11 +109,7 @@ class BakGenerator implements SegmentGeneratorInterface
             (!is_null($this->getTransactionSetPurposeCode())) ? $this->getTransactionSetPurposeCode() : '',
             (!is_null($this->getAcknowledgmentType())) ? $this->getAcknowledgmentType() : '',
             (!is_null($this->getPurchaseOrderNumber())) ? $this->getPurchaseOrderNumber() : '',
-            (!is_null($this->getDate())) ? $this->getDate() : '',
-            (!is_null($this->getReleaseNumber())) ? $this->getReleaseNumber() : '',
-            (!is_null($this->getRequestReferenceNumber())) ? $this->getRequestReferenceNumber() : '',
-            (!is_null($this->getContractNumber())) ? $this->getContractNumber() : '',
-            (!is_null($this->getReferenceIdentification())) ? $this->getReferenceIdentification() : ''
+            (!is_null($this->getDate())) ? $this->getDate() : ''
         ]);
     }
 
@@ -210,69 +185,6 @@ class BakGenerator implements SegmentGeneratorInterface
         $this->date = $date;
     }
 
-    /**
-     * @return null
-     */
-    public function getReleaseNumber()
-    {
-        return $this->releaseNumber;
-    }
-
-    /**
-     * @param null $releaseNumber
-     */
-    public function setReleaseNumber($releaseNumber): void
-    {
-        $this->releaseNumber = $releaseNumber;
-    }
-
-    /**
-     * @return null
-     */
-    public function getContractNumber()
-    {
-        return $this->contractNumber;
-    }
-
-    /**
-     * @param null $contractNumber
-     */
-    public function setContractNumber($contractNumber): void
-    {
-        $this->contractNumber = $contractNumber;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRequestReferenceNumber()
-    {
-        return $this->requestReferenceNumber;
-    }
-
-    /**
-     * @param mixed $requestReferenceNumber
-     */
-    public function setRequestReferenceNumber($requestReferenceNumber): void
-    {
-        $this->requestReferenceNumber = $requestReferenceNumber;
-    }
-
-    /**
-     * @return null
-     */
-    public function getReferenceIdentification()
-    {
-        return $this->referenceIdentification;
-    }
-
-    /**
-     * @param null $referenceIdentification
-     */
-    public function setReferenceIdentification($referenceIdentification): void
-    {
-        $this->referenceIdentification = $referenceIdentification;
-    }
 
     /**
      * @return null
@@ -281,8 +193,6 @@ class BakGenerator implements SegmentGeneratorInterface
     {
         return $this->data;
     }
-
-
 
     /**
      * @param null $data
