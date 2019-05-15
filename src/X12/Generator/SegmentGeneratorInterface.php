@@ -15,9 +15,9 @@ interface SegmentGeneratorInterface {
     public function build();
 
     /**
-     * Converto segment data to string to be used in the EDI file;
+     * Convert segment data to string to be used in the EDI file;
      *
-     * @return mixed
+     * @return string
      */
     public function __toString();
 }
