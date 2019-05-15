@@ -104,7 +104,7 @@ class IsaGenerator implements SegmentGeneratorInterface
      *
      * @var $interchangeReceiverId string
      */
-    private $interchangeReceiverId = 'AMAZON';
+    private $interchangeReceiverId = 'AMAZON         ';
 
     /**
      * ISA09

@@ -53,7 +53,7 @@ class BakGenerator implements SegmentGeneratorInterface
      *
      * @var null $acknowledgmentType
      */
-    private $acknowledgmentType = null;
+    private $acknowledgmentType = 'AC';
 
     /**
      * BAK03
@@ -88,9 +88,8 @@ class BakGenerator implements SegmentGeneratorInterface
     /**
      * PurchaseOrderAcknowledgment constructor.
      */
-    public function __construct($acknowledgmentType, $purchaseOrderNumber = null, $date = null)
+    public function __construct($purchaseOrderNumber = null, $date = null)
     {
-        $this->setAcknowledgmentType($acknowledgmentType);
         $this->setPurchaseOrderNumber($purchaseOrderNumber);
         $this->setDate($date);
     }

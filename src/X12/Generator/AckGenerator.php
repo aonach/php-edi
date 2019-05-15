@@ -113,6 +113,9 @@ class AckGenerator implements SegmentGeneratorInterface
      */
     public function __construct(Product $product)
     {
+        $this->setProductId($product->getProductId());
+        $this->setProductIdQualifier($product->getProductIdQualifier());
+
         $this->setQuantity($product->getQuantityOrdered());
         $this->setBasisMeasurementCode($product->getMeasurementCode());
     }
@@ -285,6 +288,7 @@ class AckGenerator implements SegmentGeneratorInterface
     {
         $this->industryCode = $industryCode;
     }
+
 
 
     /**

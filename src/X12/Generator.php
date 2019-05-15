@@ -13,7 +13,7 @@ use Aonach\X12\Generator\N1Generator;
 use Aonach\X12\Generator\Po1Generator;
 use Aonach\X12\Generator\SeGenerator;
 use Aonach\X12\Generator\StGenerator;
-
+use Aonach\X12\Generator\DtmGenerator;
 use Aonach\X12\Generator\Product;
 use Faker\Provider\Base;
 
@@ -52,10 +52,7 @@ class Generator
      * @var $isaGenerator isaGenerator
      */
     private $isaGenerator;
-    /**
-     * @var
-     */
-    private $n1Generator;
+
     /**
      * @var
      */
@@ -68,6 +65,11 @@ class Generator
      * @var
      */
     private $stGenerator;
+
+    /**
+     * @var array
+     */
+    private $dtmGenerator;
 
     /**
      * @var
@@ -107,12 +109,10 @@ class Generator
         $this->initGsGenerator();
         $this->initStGenerator();
         $this->initBakGenerator();
-//        $this->initN1Generator();
 
-        foreach ($this->productsData as $product) {
-            $this->setPo1Generator(new Po1Generator($product));
-            $this->initAckGenerator($product);
-        }
+        $this->initPo1Generator();
+
+        $this->initAckGenerator();
 
         $this->initCttGenerator();
         $this->initSeGenerator();
@@ -154,11 +154,15 @@ class Generator
         $fileContent[] = $this->getGsGenerator()->__toString();
         $fileContent[] = $this->getStGenerator()->__toString();
         $fileContent[] = $this->getBakGenerator()->__toString();
-//        $fileContent[] = $this->getN1Generator()->__toString();
 
         for ($i = 0; $i < count($this->getPo1Generator()); $i++) {
             $fileContent[] = $this->getPo1Generator()[$i]->__toString();
             $fileContent[] = $this->getAckGenerator()[$i]->__toString();
+            if($this->getAckGenerator()[$i]->getLineItemStatusCode() == 'IA' || $this->getAckGenerator()[$i]->getLineItemStatusCode() == 'IQ'){
+                $this->initDtmGenerator($this->extraInformation["855_data"]->dtm[1]->date);
+                $this->getDtmGenerator()->build();
+                $fileContent[] = $this->getDtmGenerator()->__toString();
+            }
         }
         $fileContent[] = $this->getCttGenerator()->__toString();
         $fileContent[] = $this->getSeGenerator()->__toString();
@@ -219,22 +223,15 @@ class Generator
     {
         $this->setBakGenerator(
             new BakGenerator(
-                $this->getExtraInformation()['acknowledgment_type'],
                 $this->getExtraInformation()['855_data']->purchase_order_number,
                 $this->getExtraInformation()['855_data']->date)
         );
     }
 
-    /**
-     *
-     */
-    private function initN1Generator()
-    {
-        $this->setN1Generator(new N1Generator(
-            'RNO1',
-            'RNO1'
-        ));
-    }
+   private function initDtmGenerator($date)
+   {
+       $this->setDtmGenerator(new DtmGenerator($date));
+   }
 
     /**
      *
@@ -283,25 +280,127 @@ class Generator
         ));
     }
 
-    private function initAckGenerator($product)
+    /**
+     *
+     */
+    private function initPo1Generator()
     {
-        $ackObj = new AckGenerator($product);
+        foreach ($this->getExtraInformation()['855_data']->po1 as $item) {
+            $product = new Product();
+
+            $product->setAssignedIdentification($item->assigned_identification);
+            $product->setQuantityOrdered($item->quantity_ordered);
+            $product->setMeasurementCode('EA'); //Fixed value for Amazon
+            $product->setUnitPrice($item->unit_price);
+            $product->setBasisUnitPriceCode(null);
+            $product->setProductIdQualifier('EN'); //Fixed value for Amazon
+            $product->setProductId($item->buyer_product_id);
+
+            $po1Obj = new Po1Generator($product);
+
+            $this->setPo1Generator($po1Obj);
+
+        }
+    }
+
+    /**
+     *
+     */
+    private function initAckGenerator()
+    {
+
+        $itemsIncluded = array();
 
         foreach ($this->getExtraInformation()['855_data']->po1 as $item) {
-            if($item->buyer_product_id == $product->getProductId()){
-                if($item->quantity_ordered > $product->getQuantityOrdered()){
-                    $ackObj->setLineItemStatusCode('IR');
-                    $ackObj->setIndustryCode('03');
+            //Shipping Items
+            foreach ($this->productsData as $product){
+                $ackObj = new AckGenerator($product);
+
+                if($item->buyer_product_id == $product->getProductId()) {
+                    if($item->quantity_ordered > $product->getQuantityOrdered()){
+                        $ackObj->setLineItemStatusCode('IQ');
+                        $this->setAckGenerator($ackObj);
+                        $itemsIncluded[] = $item->buyer_product_id;
+                        break;
+                    }
+                    $ackObj->setLineItemStatusCode('IA');
                     $this->setAckGenerator($ackObj);
-                    return;
+                    $itemsIncluded[] = $item->buyer_product_id;
+                    break;
                 }
-                $ackObj->setLineItemStatusCode('IA');
-                $ackObj->setIndustryCode('00');
+            }
+
+            //Rejected Items
+            foreach ($this->getExtraInformation()['rejectedItems'] as $rejectedItem) {
+                $ackObj = new AckGenerator($rejectedItem);
+                if($item->buyer_product_id == $rejectedItem->getProductId()) {
+                    $ackObj->setLineItemStatusCode('IR');
+                    $this->setAckGenerator($ackObj);
+                    $itemsIncluded[] = $item->buyer_product_id;
+                    break;
+                }
+            }
+
+            // Missing Items;
+            $isOn = false;
+            foreach ($this->getExtraInformation()['rejectedItems'] as $rejectedItem) {
+                if($item->buyer_product_id == $rejectedItem->getProductId()) {
+                    $isOn = true;
+                    break;
+                } else {
+                    foreach ($this->getProductsData() as $product){
+                        if($item->buyer_product_id == $product->getProductId()) {
+                            $isOn = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if(!$isOn){
+                $product = new Product();
+
+                $product->setAssignedIdentification($item->assigned_identification);
+                $product->setQuantityOrdered($item->quantity_ordered);
+                $product->setMeasurementCode('EA'); //Fixed value for Amazon
+                $product->setUnitPrice($item->unit_price);
+                $product->setBasisUnitPriceCode(null);
+                $product->setProductIdQualifier('EN'); //Fixed value for Amazon
+                $product->setProductId($item->buyer_product_id);
+
+                $ackObj = new AckGenerator($product);
+                $ackObj->setLineItemStatusCode('R2');
+
                 $this->setAckGenerator($ackObj);
-                return;
+            }
+        }
+
+        $allIncludedProducts = array();
+
+        foreach ($this->getAckGenerator() as $ackItem) {
+            $allIncludedProducts[] = $ackItem->getProductId();
+        }
+
+        foreach ($this->getExtraInformation()['855_data']->po1 as $item) {
+            if(!in_array($item->buyer_product_id, $allIncludedProducts)){
+                $product = new Product();
+
+                $product->setAssignedIdentification($item->assigned_identification);
+                $product->setQuantityOrdered($item->quantity_ordered);
+                $product->setMeasurementCode('EA'); //Fixed value for Amazon
+                $product->setUnitPrice($item->unit_price);
+                $product->setBasisUnitPriceCode(null);
+                $product->setProductIdQualifier('EN'); //Fixed value for Amazon
+                $product->setProductId($item->buyer_product_id);
+
+                $ackObj = new AckGenerator($product);
+
+                $ackObj->setLineItemStatusCode('R2');
+                $this->setAckGenerator($ackObj);
             }
         }
     }
+    
 
     /**
      * @return int
@@ -526,6 +625,23 @@ class Generator
     {
         $this->productsData = $productsData;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDtmGenerator()
+    {
+        return $this->dtmGenerator;
+    }
+
+    /**
+     * @param mixed $dtmGenerator
+     */
+    public function setDtmGenerator($dtmGenerator): void
+    {
+        $this->dtmGenerator = $dtmGenerator;
+    }
+
 
     /**
      * @return mixed

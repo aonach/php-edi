@@ -84,10 +84,12 @@ class Po1Generator implements SegmentGeneratorInterface
      *
      * @var null $basisUnitPriceCode
      */
-    private $basisUnitPriceCode = 'PE';
+    private $basisUnitPriceCode = 'NT';
 
 
     /**
+     * PO106
+     *
      * Code identifying the type/source of the descriptive number used in Product/Service ID (234)
      *
      *      AB      Assembly
@@ -103,7 +105,7 @@ class Po1Generator implements SegmentGeneratorInterface
      *
      * @var null $productIdQualifier
      */
-    private $productIdQualifier = 'VN';
+    private $productIdQualifier = 'EN';
 
 
     /**
@@ -126,7 +128,7 @@ class Po1Generator implements SegmentGeneratorInterface
         $this->setAssignedIdentification($product->getAssignedIdentification());
         $this->setQuantityOrdered($product->getQuantityOrdered());
         $this->setMeasurementCode($product->getMeasurementCode());
-        $this->setUnitPrice($product->getUnitPrice());
+        $this->setUnitPrice(number_format($product->getUnitPrice(), 2, '.', ''));
         $this->setProductId($product->getProductId());
     }
 
