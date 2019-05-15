@@ -332,6 +332,9 @@ class Generator
 
             //Rejected Items
             foreach ($this->getExtraInformation()['rejectedItems'] as $rejectedItem) {
+                if($rejectedItem->getQuantityOrdered() == 0){
+                    $rejectedItem->setQuantityOrdered($item->quantity_ordered);
+                }
                 $ackObj = new AckGenerator($rejectedItem);
                 if($item->buyer_product_id == $rejectedItem->getProductId()) {
                     $ackObj->setLineItemStatusCode('IR');
