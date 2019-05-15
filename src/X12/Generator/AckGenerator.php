@@ -115,7 +115,6 @@ class AckGenerator implements SegmentGeneratorInterface
     {
         $this->setProductId($product->getProductId());
         $this->setProductIdQualifier($product->getProductIdQualifier());
-
         $this->setQuantity($product->getQuantityOrdered());
         $this->setBasisMeasurementCode($product->getMeasurementCode());
     }
