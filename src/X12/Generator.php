@@ -331,32 +331,36 @@ class Generator
             }
 
             //Rejected Items
-            foreach ($this->getExtraInformation()['rejectedItems'] as $rejectedItem) {
-                if($rejectedItem->getQuantityOrdered() == 0){
-                    $rejectedItem->setQuantityOrdered($item->quantity_ordered);
-                }
-                $ackObj = new AckGenerator($rejectedItem);
-                if($item->buyer_product_id == $rejectedItem->getProductId()) {
-                    $ackObj->setLineItemStatusCode('IR');
-                    $this->setAckGenerator($ackObj);
-                    $itemsIncluded[] = $item->buyer_product_id;
-                    break;
+            if(isset($this->getExtraInformation()['rejectedItems'])){
+                foreach ($this->getExtraInformation()['rejectedItems'] as $rejectedItem) {
+                    if($rejectedItem->getQuantityOrdered() == 0){
+                        $rejectedItem->setQuantityOrdered($item->quantity_ordered);
+                    }
+                    $ackObj = new AckGenerator($rejectedItem);
+                    if($item->buyer_product_id == $rejectedItem->getProductId()) {
+                        $ackObj->setLineItemStatusCode('IR');
+                        $this->setAckGenerator($ackObj);
+                        $itemsIncluded[] = $item->buyer_product_id;
+                        break;
+                    }
                 }
             }
 
             // Missing Items;
             $isOn = false;
-            foreach ($this->getExtraInformation()['rejectedItems'] as $rejectedItem) {
-                if($item->buyer_product_id == $rejectedItem->getProductId()) {
+            if(isset($this->getExtraInformation()['rejectedItems'])) {
+                foreach ($this->getExtraInformation()['rejectedItems'] as $rejectedItem) {
+                    if ($item->buyer_product_id == $rejectedItem->getProductId()) {
+                        $isOn = true;
+                        break;
+                    }
+                }
+            }
+
+            foreach ($this->getProductsData() as $product) {
+                if ($item->buyer_product_id == $product->getProductId()) {
                     $isOn = true;
                     break;
-                } else {
-                    foreach ($this->getProductsData() as $product){
-                        if($item->buyer_product_id == $product->getProductId()) {
-                            $isOn = true;
-                            break;
-                        }
-                    }
                 }
             }
 
