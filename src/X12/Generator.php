@@ -95,8 +95,7 @@ class Generator
         $this->setProductsData($products);
         $this->setExtraInformation($extraInformation);
     }
-
-
+    
     /**
      * @return string
      */
