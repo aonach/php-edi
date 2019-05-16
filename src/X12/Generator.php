@@ -86,7 +86,6 @@ class Generator
      */
     private $extraInformation;
 
-
     /**
      * Generator constructor.
      */
