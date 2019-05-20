@@ -112,7 +112,7 @@ class Generator
 
         $this->initAckGenerator();
 
-        $this->initCttGenerator();
+//        $this->initCttGenerator();
         $this->initSeGenerator();
         $this->initGeGenerator();
         $this->initIeaGenerator();
@@ -141,7 +141,7 @@ class Generator
             $ack->build();
         }
 
-        $this->getCttGenerator()->build();
+//        $this->getCttGenerator()->build();
         $this->getSeGenerator()->build();
         $this->getGeGenerator()->build();
         $this->getIeaGenerator()->build();
@@ -162,7 +162,7 @@ class Generator
                 $fileContent[] = $this->getDtmGenerator()->__toString();
             }
         }
-        $fileContent[] = $this->getCttGenerator()->__toString();
+//        $fileContent[] = $this->getCttGenerator()->__toString();
         $fileContent[] = $this->getSeGenerator()->__toString();
         $fileContent[] = $this->getGeGenerator()->__toString();
         $fileContent[] = $this->getIeaGenerator()->__toString();
