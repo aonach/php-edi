@@ -141,7 +141,7 @@ class IsaGenerator implements SegmentGeneratorInterface
      *
      * @var $interchangeControlVersionNumber string
      */
-    private $interchangeControlVersionNumber = '00401';
+    private $interchangeControlVersionNumber = '00400';
 
     /**
      * ISA13
@@ -212,6 +212,8 @@ class IsaGenerator implements SegmentGeneratorInterface
         $this->setSecurityInformation($securityInformation);
         $this->setInterchangeSenderId($interchangeSenderId);
         $this->setUsageIndicator($usageIndicator);
+        $this->setInterchangeDate(date('ymd'));
+        $this->setInterchangeTime(date('hi'));
     }
 
 
