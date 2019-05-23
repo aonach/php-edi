@@ -184,8 +184,6 @@ class Generator
             $this->getSettings()['amazon/usage_indicator']
         ));
 
-        $this->getIsaGenerator()->setInterchangeDate($this->getExtraInformation()['855_data']->interchange_date);
-        $this->getIsaGenerator()->setInterchangeTime($this->getExtraInformation()['855_data']->interchange_time);
         $this->getIsaGenerator()->setInterchangeIdQualifier01($this->getSettings()['amazon/interchange_id_qualifier']);
         $this->getIsaGenerator()->setInterchangeIdQualifier02($this->getSettings()['amazon/interchange_id_qualifier']);
         $this->getIsaGenerator()->setInterchangeControlNumber($this->getExtraInformation()['855_data']->isa_interchange_control_number);
