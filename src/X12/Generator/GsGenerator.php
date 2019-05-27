@@ -117,11 +117,11 @@ class GsGenerator implements SegmentGeneratorInterface
     /**
      * FunctionalGroupHeader constructor.
      */
-    public function __construct($applicationSenderCode = null, $date, $time, $groupControlNumber)
+    public function __construct($applicationSenderCode = null, $groupControlNumber)
     {
         $this->setApplicationSenderCode($applicationSenderCode);
-        $this->setDate($date);
-        $this->setTime($time);
+        $this->setDate(date('ymd'));
+        $this->setTime(date('hi'));
         $this->setGroupControlNumber($groupControlNumber);
     }
 

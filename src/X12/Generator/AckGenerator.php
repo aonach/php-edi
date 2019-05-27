@@ -69,7 +69,7 @@ class AckGenerator implements SegmentGeneratorInterface
      *
      * @var $dateQualifier
      */
-    private $dateQualifier = null;
+    private $dateQualifier = '068';
 
     /**
      * ACK05
@@ -101,8 +101,6 @@ class AckGenerator implements SegmentGeneratorInterface
      */
     private $industryCode = null;
 
-
-
     /**
      * @var
      */
@@ -129,10 +127,17 @@ class AckGenerator implements SegmentGeneratorInterface
                 (!is_null($this->getLineItemStatusCode())) ? $this->getLineItemStatusCode() : '',
                 (!is_null($this->getQuantity())) ? $this->getQuantity() : '',
                 (!is_null($this->getBasisMeasurementCode())) ? $this->getBasisMeasurementCode() : ''
-//                (!is_null($this->getDateQualifier())) ? $this->getDateQualifier() : '',
-//                (!is_null($this->getDate())) ? $this->getDate() : ''
             ]
         );
+
+        if(!is_null($this->getDate())){
+            $dateQualifier = (!is_null($this->getDateQualifier())) ? $this->getDateQualifier() : '';
+            $date = (!is_null($this->getDate())) ? $this->getDate() : '';
+            $data = $this->getData();
+            array_push($data, $dateQualifier, $date);
+
+            $this->setData($data);
+        }
     }
 
     /**

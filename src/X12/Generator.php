@@ -112,7 +112,7 @@ class Generator
 
         $this->initAckGenerator();
 
-//        $this->initCttGenerator();
+        $this->initCttGenerator();
         $this->initSeGenerator();
         $this->initGeGenerator();
         $this->initIeaGenerator();
@@ -141,7 +141,7 @@ class Generator
             $ack->build();
         }
 
-//        $this->getCttGenerator()->build();
+        $this->getCttGenerator()->build();
         $this->getSeGenerator()->build();
         $this->getGeGenerator()->build();
         $this->getIeaGenerator()->build();
@@ -162,10 +162,10 @@ class Generator
                 $fileContent[] = $this->getDtmGenerator()->__toString();
             }
         }
-//        $fileContent[] = $this->getCttGenerator()->__toString();
+        $fileContent[] = $this->getCttGenerator()->__toString();
         $fileContent[] = $this->getSeGenerator()->__toString();
         $fileContent[] = $this->getGeGenerator()->__toString();
-        $fileContent[] = $this->getIeaGenerator()->__toString();
+        $fileContent[] = $this->getIeaGenerator()->__toString() . '~';
 
         return implode('~', $fileContent);
     }
@@ -196,8 +196,6 @@ class Generator
     {
         $this->setGsGenerator(new GsGenerator(
             $this->getExtraInformation()['855_data']->application_receiver_code, // This will be used in the 'Application Sender's Code'.
-            $this->getExtraInformation()['855_data']->date,
-            $this->getExtraInformation()['855_data']->time,
             $this->getExtraInformation()['855_data']->gs_group_control_number
         ));
     }
@@ -236,8 +234,8 @@ class Generator
     {
         $ctt02 = 0;
 
-        foreach ($this->getProductsData() as $product) {
-            $ctt02 += $product->getQuantityOrdered();
+        foreach ($this->getPo1Generator() as $po) {
+            $ctt02 += $po->getQuantityOrdered();
         }
 
         $this->setCttGenerator(new CttGenerator($this->getNumberOfLineItems(), $ctt02));
@@ -315,11 +313,13 @@ class Generator
                 if($item->buyer_product_id == $product->getProductId()) {
                     if($item->quantity_ordered > $product->getQuantityOrdered()){
                         $ackObj->setLineItemStatusCode('IQ');
+                        $ackObj->setDate($this->extraInformation["855_data"]->dtm[0]->date);
                         $this->setAckGenerator($ackObj);
                         $itemsIncluded[] = $item->buyer_product_id;
                         break;
                     }
                     $ackObj->setLineItemStatusCode('IA');
+                    $ackObj->setDate($this->extraInformation["855_data"]->dtm[0]->date);
                     $this->setAckGenerator($ackObj);
                     $itemsIncluded[] = $item->buyer_product_id;
                     break;
@@ -410,7 +410,17 @@ class Generator
      */
     public function getNumberOfSegments()
     {
-        return count($this->getProductsData()) * 2 + 9;
+        $po1Count = count($this->getPo1Generator());
+        $ackCount = count($this->getAckGenerator());
+        $dtmCount = 0;
+
+        foreach ($this->getAckGenerator() as $ackItem) {
+            if(in_array($ackItem->getLineItemStatusCode(), ['IQ', 'IA'])){
+                $dtmCount++;
+            }
+        }
+
+        return $po1Count + $ackCount + $dtmCount + 8;
     }
 
     /**
@@ -418,7 +428,7 @@ class Generator
      */
     public function getNumberOfLineItems()
     {
-        return count($this->getProductsData());
+        return count($this->getPo1Generator());
     }
 
     /**
