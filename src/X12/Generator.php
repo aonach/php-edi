@@ -420,7 +420,7 @@ class Generator
             }
         }
 
-        return $po1Count + $ackCount + $dtmCount + 8;
+        return $po1Count + $ackCount + $dtmCount + 4;
     }
 
     /**
