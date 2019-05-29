@@ -228,7 +228,9 @@ class Generator
    }
 
     /**
-     *
+     * Init CTT generator
+     * Gets the amount of PO1 items and sum all qty ordered.
+     * 
      */
     private function initCttGenerator()
     {
@@ -298,7 +300,8 @@ class Generator
     }
 
     /**
-     *
+     * Init ACK generator
+     * Checking all products information
      */
     private function initAckGenerator()
     {
@@ -406,6 +409,10 @@ class Generator
     
 
     /**
+     * Get the amount of Segments in the file.
+     * We are summing up all segments between ST and SE segments (the 4 number down there).
+     * Including all occurrences of the PO1, ACK and DTM segments.
+     * 
      * @return int
      */
     public function getNumberOfSegments()
