@@ -95,7 +95,7 @@ class Generator
         $this->setProductsData($products);
         $this->setExtraInformation($extraInformation);
     }
-    
+
     /**
      * @return string
      */
@@ -156,7 +156,7 @@ class Generator
         for ($i = 0; $i < count($this->getPo1Generator()); $i++) {
             $fileContent[] = $this->getPo1Generator()[$i]->__toString();
             $fileContent[] = $this->getAckGenerator()[$i]->__toString();
-            if($this->getAckGenerator()[$i]->getLineItemStatusCode() == 'IA' || $this->getAckGenerator()[$i]->getLineItemStatusCode() == 'IQ'){
+            if ($this->getAckGenerator()[$i]->getLineItemStatusCode() == 'IA' || $this->getAckGenerator()[$i]->getLineItemStatusCode() == 'IQ') {
                 $this->initDtmGenerator($this->extraInformation["855_data"]->dtm[1]->date);
                 $this->getDtmGenerator()->build();
                 $fileContent[] = $this->getDtmGenerator()->__toString();
@@ -222,10 +222,10 @@ class Generator
         );
     }
 
-   private function initDtmGenerator($date)
-   {
-       $this->setDtmGenerator(new DtmGenerator($date));
-   }
+    private function initDtmGenerator($date)
+    {
+        $this->setDtmGenerator(new DtmGenerator($date));
+    }
 
     /**
      *
@@ -303,48 +303,44 @@ class Generator
     private function initAckGenerator()
     {
 
-        $itemsIncluded = array();
-
         foreach ($this->getExtraInformation()['855_data']->po1 as $item) {
-            //Shipping Items
-            foreach ($this->productsData as $product){
+            //Shipping Items - Products that are in the CSV for prima.
+            foreach ($this->productsData as $product) {
                 $ackObj = new AckGenerator($product);
 
-                if($item->buyer_product_id == $product->getProductId()) {
-                    if($item->quantity_ordered > $product->getQuantityOrdered()){
+                if ($item->buyer_product_id == $product->getProductId()) {
+                    if ($item->quantity_ordered > $product->getQuantityOrdered()) {
                         $ackObj->setLineItemStatusCode('IQ');
                         $ackObj->setDate($this->extraInformation["855_data"]->dtm[0]->date);
                         $this->setAckGenerator($ackObj);
-                        $itemsIncluded[] = $item->buyer_product_id;
-                        break;
+                        continue 2;
                     }
                     $ackObj->setLineItemStatusCode('IA');
                     $ackObj->setDate($this->extraInformation["855_data"]->dtm[0]->date);
                     $this->setAckGenerator($ackObj);
-                    $itemsIncluded[] = $item->buyer_product_id;
-                    break;
+                    continue 2;
                 }
             }
 
-            //Rejected Items
-            if(isset($this->getExtraInformation()['rejectedItems'])){
+            //Rejected Items - Products that don't have stock
+            if (isset($this->getExtraInformation()['rejectedItems'])) {
                 foreach ($this->getExtraInformation()['rejectedItems'] as $rejectedItem) {
-                    if($rejectedItem->getQuantityOrdered() == 0){
-                        $rejectedItem->setQuantityOrdered($item->quantity_ordered);
-                    }
-                    $ackObj = new AckGenerator($rejectedItem);
-                    if($item->buyer_product_id == $rejectedItem->getProductId()) {
+                    if ($item->buyer_product_id == $rejectedItem->getProductId()) {
+                        if ($rejectedItem->getQuantityOrdered() == 0) {
+                            $rejectedItem->setQuantityOrdered($item->quantity_ordered);
+                        }
+                        $ackObj = new AckGenerator($rejectedItem);
+
                         $ackObj->setLineItemStatusCode('IR');
                         $this->setAckGenerator($ackObj);
-                        $itemsIncluded[] = $item->buyer_product_id;
-                        break;
+                        continue 2;
                     }
                 }
             }
 
-            // Missing Items;
+            // Missing Items - Products that don't exist in prima.
             $isOn = false;
-            if(isset($this->getExtraInformation()['rejectedItems'])) {
+            if (isset($this->getExtraInformation()['rejectedItems'])) {
                 foreach ($this->getExtraInformation()['rejectedItems'] as $rejectedItem) {
                     if ($item->buyer_product_id == $rejectedItem->getProductId()) {
                         $isOn = true;
@@ -360,7 +356,7 @@ class Generator
                 }
             }
 
-            if(!$isOn){
+            if (!$isOn) {
                 $product = new Product();
 
                 $product->setAssignedIdentification($item->assigned_identification);
@@ -385,7 +381,7 @@ class Generator
         }
 
         foreach ($this->getExtraInformation()['855_data']->po1 as $item) {
-            if(!in_array($item->buyer_product_id, $allIncludedProducts)){
+            if (!in_array($item->buyer_product_id, $allIncludedProducts)) {
                 $product = new Product();
 
                 $product->setAssignedIdentification($item->assigned_identification);
@@ -403,7 +399,7 @@ class Generator
             }
         }
     }
-    
+
 
     /**
      * @return int
@@ -415,7 +411,7 @@ class Generator
         $dtmCount = 0;
 
         foreach ($this->getAckGenerator() as $ackItem) {
-            if(in_array($ackItem->getLineItemStatusCode(), ['IQ', 'IA'])){
+            if (in_array($ackItem->getLineItemStatusCode(), ['IQ', 'IA'])) {
                 $dtmCount++;
             }
         }
